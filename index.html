@@ -76,12 +76,48 @@
 
     <div class="container">
         <div class="row">
+            <h3 id="line">Select File</h3>
+            <input type="file" id="csv-file" name="files" />
             <div id="content" class="col-md-10">
-                <input type="file" id="csv-file" name="files" />
+            </div>
+        </div>
+        <div class="row">
+            <div id="content" class="col-md-10">
 
                 <h3 id="line">Chart</h3>
 
                 <div id="real-time-line" class="epoch" style="height: 200px"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div id="content" class="col-md-10">
+                <h3 id="line">Video</h3>
+                <video id="video-active"
+                       class="video-active"
+                       width="640"
+                       height="390"
+                       controls="controls">
+                    <source src="movie.mp4" type="video/mp4">
+                </video>
+                <div id="current">0:00</div>
+                <div id="duration">0:00</div>
+
+                <script>
+                    $(document).ready(function(){
+                        $("#video-active").on(
+                          "timeupdate", 
+                          function (event) {
+                              this.pause();
+                              onTrackedVideoFrame(this.currentTime, this.duration);
+                              this.play();
+                          });
+                    });
+
+                    function onTrackedVideoFrame(currentTime, duration){
+                        $("#current").text(currentTime);
+                        $("#duration").text(duration);
+                    }
+                </script>
             </div>
         </div>
     </div>
