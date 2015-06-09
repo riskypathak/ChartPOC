@@ -53,8 +53,9 @@
                     type: 'time.line',
                     data: history,
                     axes: ['left', 'bottom', 'right'],
-                    tickFormats: { time: function (d) { return "d"; } },
-                    ticks: { time: 10, right: 5, left: 5 }
+                    ticks: {right: 5, left: 5, bottom: 20},
+                    tickFormats: { bottom: function (d) { return d - initialTimeStamp; } },
+                    windowSize: 60
                 });
             }
             else {
@@ -62,8 +63,9 @@
             }
 
             if (!isPause) {
-                intervalTrigger = setInterval(function () { chart.push(next()); }, 100);
+                intervalTrigger = setInterval(function () { chart.push(next()); currentIndex++; }, 100);
                 chart.push(next());
+                currentIndex++;
             }
         }
 
