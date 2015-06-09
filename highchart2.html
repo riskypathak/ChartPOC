@@ -19,6 +19,7 @@
 
     <script>
         var csvData;
+        var initialTimeStamp;
 
         function handleFileSelect(evt) {
             var file = evt.target.files[0];
@@ -28,20 +29,22 @@
                 dynamicTyping: true,
                 complete: function (results) {
                     csvData = results;
-                    process();
+                    initialTimeStamp = csvData.data[0].time;
+                    $("#video-active").css('display', 'inline');
+                    $("real-time-line").css('display', 'inline');
                 }
             });
         }
 
 
         var index = 0;
-        function process() {
+        var intervalTrigger;
+        function process(startIndex, isPause) {
             var history = [];
-
 
             history.push({ values: [] });
 
-            for (i = 0; i < 60; i++) {
+            for (i = startIndex; i < startIndex + 1; i++) {
                 history[0].values.push(csvData.data[i]);
             }
             index = i;
@@ -50,11 +53,15 @@
                 type: 'time.line',
                 data: history,
                 axes: ['left', 'bottom', 'right'],
+                historySize: 10,
+                tickFormats: { time: function (d) { return "d"; } },
                 ticks: { time: 10, right: 5, left: 5 }
             });
 
-            setInterval(function () { chart.push(next()); }, 1000);
-            chart.push(next());
+            if (!isPause) {
+                intervalTrigger = setInterval(function () { chart.push(next()); }, 100);
+                chart.push(next());
+            }
         }
 
         function next() {
@@ -99,24 +106,47 @@
                        controls="controls">
                     <source src="movie.mp4" type="video/mp4">
                 </video>
-                <div id="current">0:00</div>
-                <div id="duration">0:00</div>
 
                 <script>
-                    $(document).ready(function(){
+                    $(document).ready(function () {
+
+                        $("#video-active").css('display', 'none');
+                        $("real-time-line").css('display', 'none');
+
                         $("#video-active").on(
-                          "timeupdate", 
+                          "play",
                           function (event) {
-                              this.pause();
-                              onTrackedVideoFrame(this.currentTime, this.duration);
-                              this.play();
+                              process(0, false);
+                          });
+
+                        $("#video-active").on(
+                          "pause",
+                          function (event) {
+                              window.clearInterval(intervalTrigger);
+
+                              $("real-time-line").css('display', 'none');
+
+                              $('#real-time-line').epoch({
+                                  type: 'time.line',
+                                  data: [],
+                                  axes: ['left', 'bottom', 'right'],
+                                  fps: 29,
+                                  tickFormats: { time: function (d) { return "d"; } },
+                                  ticks: { time: 20, right: 10, left: 10 }
+                              });
+
+
+                              var timeStamp = initialTimeStamp + parseInt(this.currentTime);
+
+                              var indexes = $.map(csvData.data, function (obj, index) {
+                                  if (obj.time == timeStamp) {
+                                      return index;
+                                  }
+                              })
+
+                              process(indexes[0], true);
                           });
                     });
-
-                    function onTrackedVideoFrame(currentTime, duration){
-                        $("#current").text(currentTime);
-                        $("#duration").text(duration);
-                    }
                 </script>
             </div>
         </div>
