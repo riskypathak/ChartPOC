@@ -34,6 +34,7 @@
                     initialTimeStamp = csvData.data[0].time;
                     $("#video-active").css('display', 'inline');
                     $("real-time-line").css('display', 'inline');
+                    process(0, true);
                 }
             });
         }
@@ -53,9 +54,8 @@
                     type: 'time.line',
                     data: history,
                     axes: ['left', 'bottom', 'right'],
-                    ticks: {right: 5, left: 5, bottom: 20},
-                    tickFormats: { bottom: function (d) { return d - initialTimeStamp; } },
-                    windowSize: 60
+                    ticks: { right: 5, left: 5, bottom: 20 },
+                    tickFormats: { bottom: function (d) { return d - initialTimeStamp; } }
                 });
             }
             else {
@@ -108,7 +108,7 @@
                        width="640"
                        height="390"
                        controls="controls">
-                    <source src="movie.mp4" type="video/mp4">
+                    <source src="data/sample1/video.mp4" type="video/mp4">
                 </video>
 
                 <script>

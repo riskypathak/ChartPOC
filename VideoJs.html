@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+    <script src="//vjs.zencdn.net/4.12/video.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script>
+        $(document).ready(function () {
+            $("#btnSpeed").click(function () {
+                if (this.value == "normal") {
+                    document.getElementById("vdoMain").playbackRate = 2.0;
+                    $(this).value = "fast";
+                    $(this).text('Fast');
+
+                }
+                else if (this.value == "fast") {
+                    document.getElementById("vdoMain").playbackRate = 1.0;
+                    $(this).value = "normal";
+                    $(this).text('Normal');
+                }
+            });
+
+            $("#btnPlay").click(function()
+            {
+                if (this.value == "play") {
+                    document.getElementById("vdoMain").play();
+                    this.value = "pause";
+                    $(this).text('Pause');
+                }
+                else if (this.value == "pause") {
+                    document.getElementById("vdoMain").pause();
+                    this.value = "play";
+                    $(this).text('Play');
+                }
+            });
+
+        });
+
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <input type="file" multiple webkitdirectory id="fileURL" />
+        </div>
+
+        <div class="row">
+            <video id="vdoMain" class="video-js vjs-default-skin"
+                   preload="auto" width="640" height="264">
+                <source src="data/sample1/video.mp4" type='video/mp4' />
+                <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+            </video>
+        </div>
+
+        <div class="row">
+            Speed: 
+        </div>
+        <div class="row">
+            <button id="btnPlay" value="play">Play</button>
+        </div>
+    </div>
+</body>
+</html>

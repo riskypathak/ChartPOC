@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>VisualizeData</title>
+    <link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+    <script src="//vjs.zencdn.net/4.12/video.js"></script>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/my.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/my.css">
+
+    <script src="js/papaparse.js"></script>
+    <script src="js/d3.js"></script>
+    <script src="js/epoch.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <img src="images/logo.png" style="width: 75px; height: 75px" />
+        </div>
+        <div class="row">
+            <ul class="nav nav-tabs bgblack">
+                <li><a href="#">Visualize</a></li>
+                <li><a href="#">Help</a></li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-sm-10">
+                <h3>Visualize Your Data </h3>
+            </div>
+
+            <div class="col-sm-2">
+                <a href="#" class="btn btn-warning btn-sm">
+                    <input type="file" multiple webkitdirectory id="fileData" />
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div id="containerVideo" class="col-sm-8">
+                <video id="vdoMain" class="video-js vjs-default-skin" preload="auto">
+                    <source type='video/mp4' />
+                    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+                </video>
+            </div>
+
+            <div class="col-sm-4">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0"
+                         aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-2">
+                <button value="play" id="btnPlay"><span class="glyphicon glyphicon-play"></span></button>
+                <button value="normal" id="btnSpeed">Speed: Normal</button>
+
+            </div>
+            <div class="col-sm-2">
+                <span id="spnCurrentTime">00:00</span>
+                /
+                <span id="spnTotalTime">00:00</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <h3 id="line">Engagement Level</h3>
+
+                <div id="epochChartEngagement" style="height: 300px" class="epoch"></div>
+            </div>
+            <div class="col-sm-6">
+                <h3 id="line">Stress Level</h3>
+
+                <div id="epochChartStress" style="height: 300px" class="epoch"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
