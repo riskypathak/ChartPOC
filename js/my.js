@@ -1,18 +1,21 @@
-﻿$(document).ready(function () {
+﻿var speedFactor = 100;
+
+$(document).ready(function () {
 
     $("#fileData").change(handleFileSelect);
 
     $("#btnSpeed").click(function () {
         if (this.value == "normal") {
             document.getElementById("vdoMain").playbackRate = 2.0;
-            $(this).value = "fast";
-            $(this).text('Fast');
-
+            document.getElementById("btnSpeed").value = "fast";
+            $(this).text('Speed: Fast');
+            speedFactor = 50;
         }
         else if (this.value == "fast") {
             document.getElementById("vdoMain").playbackRate = 1.0;
-            $(this).value = "normal";
-            $(this).text('Normal');
+            document.getElementById("btnSpeed").value = "normal";
+            $(this).text('Speed: Normal');
+            speedFactor = 100;
         }
     });
 
@@ -134,7 +137,7 @@ function process(startIndex, isPause) {
             data: history,
             axes: ['left', 'bottom', 'right'],
             ticks: { right: 5, left: 5, bottom: 20 },
-            tickFormats: { bottom: function (d) { return d - csvEngagementData.data[0].time; } },
+            tickFormats: { bottom: function (d) { return d - csvEngagementData.data[0].time; } }
         });
     }
     else {
@@ -157,7 +160,7 @@ function process(startIndex, isPause) {
             data: history,
             axes: ['left', 'bottom', 'right'],
             ticks: { right: 5, left: 5, bottom: 20 },
-            tickFormats: { bottom: function (d) { return d - csvEngagementData.data[0].time; } },
+            tickFormats: { bottom: function (d) { return d - csvEngagementData.data[0].time; } }
         });
     }
     else {
