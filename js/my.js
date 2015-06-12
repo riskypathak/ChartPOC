@@ -78,7 +78,7 @@ $(document).ready(function () {
 
             var currentValue = parseInt(currentTime * 100 / totalDuration)
             $('.progress-bar').css('width', currentValue + '%').attr('aria-valuenow', currentValue);
-            
+
         }
 
     }, 500);
@@ -138,7 +138,7 @@ function process(startIndex, isPause) {
             axes: ['left', 'bottom', 'right'],
             ticks: { right: 5, left: 5, bottom: 20 },
             tickFormats: { bottom: function (d) { return d - csvEngagementData.data[0].time; } },
-            range: [-1.0, 1.0],
+            range: [-1.0, 0.0, 1.0],
         });
     }
     else {
@@ -162,7 +162,7 @@ function process(startIndex, isPause) {
             axes: ['left', 'bottom', 'right'],
             ticks: { right: 5, left: 5, bottom: 20 },
             tickFormats: { bottom: function (d) { return d - csvEngagementData.data[0].time; } },
-            range: [-1, 1]
+            range: [-1.0, 0.0, 1.0]
         });
     }
     else {
