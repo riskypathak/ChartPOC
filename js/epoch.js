@@ -1,19 +1,19 @@
-(function() {
+(function () {
     var e;
     null == window.Epoch && (window.Epoch = {});
     null == (e = window.Epoch).Chart && (e.Chart = {});
     null == (e = window.Epoch).Time && (e.Time = {});
     null == (e = window.Epoch).Util && (e.Util = {});
     null == (e = window.Epoch).Formats && (e.Formats = {});
-    Epoch.warn = function(g) {
+    Epoch.warn = function (g) {
         return (console.warn || console.log)("Epoch Warning: " + g)
     };
-    Epoch.exception = function(g) {
+    Epoch.exception = function (g) {
         throw "Epoch Error: " + g;
     }
 }).call(this);
-(function() {
-    Epoch.TestContext = function() {
+(function () {
+    Epoch.TestContext = function () {
         function e() {
             var c, a, d;
             this._log = [];
@@ -22,10 +22,10 @@
         }
         var g;
         g = "arc arcTo beginPath bezierCurveTo clearRect clip closePath drawImage fill fillRect fillText moveTo quadraticCurveTo rect restore rotate save scale scrollPathIntoView setLineDash setTransform stroke strokeRect strokeText transform translate".split(" ");
-        e.prototype._makeFauxMethod = function(c) {
-            return this[c] = function() {
+        e.prototype._makeFauxMethod = function (c) {
+            return this[c] = function () {
                 var a;
-                return this._log.push("" + c + "(" + function() {
+                return this._log.push("" + c + "(" + function () {
                     var d,
                         b, h;
                     h = [];
@@ -35,9 +35,9 @@
                 }.apply(this, arguments).join(",") + ")")
             }
         };
-        e.prototype.getImageData = function() {
+        e.prototype.getImageData = function () {
             var c;
-            this._log.push("getImageData(" + function() {
+            this._log.push("getImageData(" + function () {
                 var a, d, b;
                 b = [];
                 a = 0;
@@ -54,10 +54,10 @@
         return e
     }()
 }).call(this);
-(function() {
+(function () {
     var e, g;
-    e = function(c) {
-        return function(a) {
+    e = function (c) {
+        return function (a) {
             return Object.prototype.toString.call(a) === "[object " + c + "]"
         }
     };
@@ -66,10 +66,10 @@
     Epoch.isString = e("String");
     Epoch.isFunction = e("Function");
     Epoch.isNumber = e("Number");
-    Epoch.isElement = function(c) {
+    Epoch.isElement = function (c) {
         return "undefined" !== typeof HTMLElement && null !== HTMLElement ? c instanceof HTMLElement : null != c && Epoch.isObject(c) && 1 === c.nodeType && Epoch.isString(c.nodeName)
     };
-    Epoch.Util.copy = function(c) {
+    Epoch.Util.copy = function (c) {
         var a, d, b;
         if (null ==
             c) return null;
@@ -77,13 +77,13 @@
         for (d in c) b = c[d], a[d] = b;
         return a
     };
-    Epoch.Util.defaults = function(c, a) {
+    Epoch.Util.defaults = function (c, a) {
         var d, b, h, k, f;
         f = Epoch.Util.copy(c);
         for (h in a) k = c[h], b = a[h], d = Epoch.isObject(k) && Epoch.isObject(b), null != k && null != b ? d && !Epoch.isArray(k) ? f[h] = Epoch.Util.defaults(k, b) : f[h] = k : f[h] = null != k ? k : b;
         return f
     };
-    Epoch.Util.formatSI = function(c, a, d) {
+    Epoch.Util.formatSI = function (c, a, d) {
         var b, h, k, f;
         null == a && (a = 1);
         null == d && (d = !1);
@@ -100,7 +100,7 @@
                 return "" + c + " " + k
             }
     };
-    Epoch.Util.formatBytes = function(c, a, d) {
+    Epoch.Util.formatBytes = function (c, a, d) {
         var b, h, k, f;
         null == a && (a = 1);
         null == d && (d = !1);
@@ -116,11 +116,11 @@
                 return "" + c + " " + k
             }
     };
-    Epoch.Util.dasherize = function(c) {
+    Epoch.Util.dasherize = function (c) {
         return Epoch.Util.trim(c).replace("\n", "").replace(/\s+/g, "-").toLowerCase()
     };
     Epoch.Util.domain =
-        function(c, a) {
+        function (c, a) {
             var d, b, h, k, f, q, u, m;
             null == a && (a = "x");
             h = {};
@@ -130,55 +130,59 @@
                 for (b = c[k], m = b.values, f = 0, u = m.length; f < u; f++) b = m[f], null == h[b[a]] && (d.push(b[a]), h[b[a]] = !0);
             return d
         };
-    Epoch.Util.trim = function(c) {
+    Epoch.Util.trim = function (c) {
         return Epoch.isString(c) ? c.replace(/^\s+/g, "").replace(/\s+$/g, "") : null
     };
-    Epoch.Util.getComputedStyle = function(c, a) {
+    Epoch.Util.getComputedStyle = function (c, a) {
         if (Epoch.isFunction(window.getComputedStyle)) return window.getComputedStyle(c, a);
         if (null != c.currentStyle) return c.currentStyle
     };
-    Epoch.Util.toRGBA = function(c, a) {
+    Epoch.Util.toRGBA = function (c, a) {
         var d, b,
             h;
         if (d = c.match(/^rgba\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*[0-9\.]+\)/)) h = d[1], b = d[2], d = d[3], b = "rgba(" + h + "," + b + "," + d + "," + a + ")";
         else if (d = d3.rgb(c)) b = "rgba(" + d.r + "," + d.g + "," + d.b + "," + a + ")";
         return b
     };
-    Epoch.Util.getContext = function(c, a) {
+    Epoch.Util.getContext = function (c, a) {
         null == a && (a = "2d");
         return null != c.getContext ? c.getContext(a) : new Epoch.TestContext
     }
 }).call(this);
-(function() {
-    d3.selection.prototype.width = function(e) {
+(function () {
+    d3.selection.prototype.width = function (e) {
         return null != e && Epoch.isString(e) ? this.style("width", e) : null != e && Epoch.isNumber(e) ? this.style("width", "" + e + "px") : +Epoch.Util.getComputedStyle(this.node(), null).width.replace("px", "")
     };
-    d3.selection.prototype.height = function(e) {
+    d3.selection.prototype.height = function (e) {
         return null != e && Epoch.isString(e) ? this.style("height", e) : null != e && Epoch.isNumber(e) ? this.style("height", "" + e + "px") : +Epoch.Util.getComputedStyle(this.node(), null).height.replace("px", "")
     }
 }).call(this);
-(function() {
+
+var isOdd = true;
+
+(function () {
     var e;
-    Epoch.Formats.regular = function(g) {
-        return g.toFixed(2);
+    Epoch.Formats.regular = function (g) {
+        isOdd = !isOdd;
+        return isOdd ? 1.0 : -1.0;
     };
-    Epoch.Formats.si = function(g) {
+    Epoch.Formats.si = function (g) {
         return Epoch.Util.formatSI(g)
     };
-    Epoch.Formats.percent = function(g) {
+    Epoch.Formats.percent = function (g) {
         return (100 * g).toFixed(1) + "%"
     };
-    Epoch.Formats.seconds = function(g) {
+    Epoch.Formats.seconds = function (g) {
         return e(new Date(1E3 * g))
     };
     e = d3.time.format("%I:%M:%S %p");
-    Epoch.Formats.bytes = function(g) {
+    Epoch.Formats.bytes = function (g) {
         return Epoch.Util.formatBytes(g)
     }
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -188,15 +192,15 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Events = function() {
+    Epoch.Events = function () {
         function c() {
             this._events = {}
         }
-        c.prototype.on = function(a, d) {
+        c.prototype.on = function (a, d) {
             var b;
             if (null != d) return null == (b = this._events)[a] && (b[a] = []), this._events[a].push(d)
         };
-        c.prototype.onAll = function(a) {
+        c.prototype.onAll = function (a) {
             var d, b, h;
             if (Epoch.isObject(a)) {
                 h = [];
@@ -205,15 +209,15 @@
             }
         };
         c.prototype.off =
-            function(a, d) {
+            function (a, d) {
                 var b, h;
                 if (Epoch.isArray(this._events[a])) {
                     if (null == d) return delete this._events[a];
-                    for (h = []; 0 <= (b = this._events[a].indexOf(d));) h.push(this._events[a].splice(b, 1));
+                    for (h = []; 0 <= (b = this._events[a].indexOf(d)) ;) h.push(this._events[a].splice(b, 1));
                     return h
                 }
             };
-        c.prototype.offAll = function(a) {
+        c.prototype.offAll = function (a) {
             var d, b, h, k;
             if (Epoch.isArray(a)) {
                 k = [];
@@ -227,10 +231,10 @@
                 return h
             }
         };
-        c.prototype.trigger = function(a) {
+        c.prototype.trigger = function (a) {
             var d, b, h, k, f, q, c, m;
             if (null != this._events[a]) {
-                d = function() {
+                d = function () {
                     var a, f, q;
                     q = [];
                     k = a = 1;
@@ -246,7 +250,7 @@
         };
         return c
     }();
-    Epoch.Chart.Base = function(c) {
+    Epoch.Chart.Base = function (c) {
         function a(h) {
             this.options = null != h ? h : {};
             a.__super__.constructor.call(this);
@@ -267,17 +271,17 @@
             "option:width": "dimensionsChanged",
             "option:height": "dimensionsChanged"
         };
-        a.prototype._getAllOptions = function() {
+        a.prototype._getAllOptions = function () {
             return Epoch.Util.defaults({},
                 this.options)
         };
-        a.prototype._getOption = function(a) {
+        a.prototype._getOption = function (a) {
             var k, f;
             a = a.split(".");
             for (k = this.options; a.length && null != k;) f = a.shift(), k = k[f];
             return k
         };
-        a.prototype._setOption = function(a, k) {
+        a.prototype._setOption = function (a, k) {
             var f, q, b;
             f = a.split(".");
             for (q = this.options; f.length;) {
@@ -291,7 +295,7 @@
                 q = q[b]
             }
         };
-        a.prototype._setManyOptions = function(a, k) {
+        a.prototype._setManyOptions = function (a, k) {
             var f, q, b;
             null == k && (k = "");
             b = [];
@@ -299,13 +303,13 @@
                 f, q));
             return b
         };
-        a.prototype.option = function() {
+        a.prototype.option = function () {
             if (0 === arguments.length) return this._getAllOptions();
             if (1 === arguments.length && Epoch.isString(arguments[0])) return this._getOption(arguments[0]);
             if (2 === arguments.length && Epoch.isString(arguments[0])) return this._setOption(arguments[0], arguments[1]);
             if (1 === arguments.length && Epoch.isObject(arguments[0])) return this._setManyOptions(arguments[0])
         };
-        a.prototype.setData = function(a) {
+        a.prototype.setData = function (a) {
             var k, f, b, d, c;
             k = 1;
             d = 0;
@@ -313,22 +317,22 @@
                 k), b.category = k, null != b.label && f.push(Epoch.Util.dasherize(b.label)), b.className = f.join(" "), k++;
             return this.data = a
         };
-        a.prototype.update = function(a, k) {
+        a.prototype.update = function (a, k) {
             null == k && (k = !0);
             this.setData(a);
             if (k) return this.draw()
         };
-        a.prototype.draw = function() {
+        a.prototype.draw = function () {
             return this.trigger("draw")
         };
-        a.prototype.extent = function(a) {
-            return [d3.min(this.data, function(k) {
+        a.prototype.extent = function (a) {
+            return [d3.min(this.data, function (k) {
                 return d3.min(k.values, a)
-            }), d3.max(this.data, function(k) {
+            }), d3.max(this.data, function (k) {
                 return d3.max(k.values, a)
             })]
         };
-        a.prototype.dimensionsChanged = function() {
+        a.prototype.dimensionsChanged = function () {
             this.width = this.option("width") || this.width;
             this.height = this.option("height") || this.height;
             this.el.width(this.width);
@@ -336,7 +340,7 @@
         };
         return a
     }(Epoch.Events);
-    Epoch.Chart.SVG = function(c) {
+    Epoch.Chart.SVG = function (c) {
         function a(d) {
             this.options = null != d ? d : {};
             a.__super__.constructor.call(this, this.options);
@@ -348,13 +352,13 @@
             })
         }
         g(a, c);
-        a.prototype.dimensionsChanged = function() {
+        a.prototype.dimensionsChanged = function () {
             a.__super__.dimensionsChanged.call(this);
             return this.svg.attr("width", this.width).attr("height", this.height)
         };
         return a
     }(Epoch.Chart.Base);
-    Epoch.Chart.Canvas = function(c) {
+    Epoch.Chart.Canvas = function (c) {
         function a(d) {
             this.options = null != d ? d : {};
             a.__super__.constructor.call(this, this.options);
@@ -372,19 +376,19 @@
             this.ctx = Epoch.Util.getContext(this.canvas.node())
         }
         g(a, c);
-        a.prototype.getWidth = function() {
+        a.prototype.getWidth = function () {
             return this.width * this.pixelRatio
         };
-        a.prototype.getHeight = function() {
+        a.prototype.getHeight = function () {
             return this.height * this.pixelRatio
         };
-        a.prototype.clear = function() {
+        a.prototype.clear = function () {
             return this.ctx.clearRect(0, 0, this.getWidth(), this.getHeight())
         };
-        a.prototype.getStyles = function(a) {
+        a.prototype.getStyles = function (a) {
             return Epoch.QueryCSS.getStyles(a, this.el)
         };
-        a.prototype.dimensionsChanged = function() {
+        a.prototype.dimensionsChanged = function () {
             a.__super__.dimensionsChanged.call(this);
             this.canvas.style({
                 width: "" + this.width + "px",
@@ -398,18 +402,18 @@
         return a
     }(Epoch.Chart.Base)
 }).call(this);
-(function() {
+(function () {
     var e;
-    e = function() {
-        function g() {}
+    e = function () {
+        function g() { }
         var c, a, d, b, h;
         a = 0;
-        b = function() {
+        b = function () {
             return "epoch-container-" + a++
         };
         c = /^([^#. ]+)?(#[^. ]+)?(\.[^# ]+)?$/;
         d = !1;
-        h = function(a) {
+        h = function (a) {
             var f, b;
             f = a.match(c);
             if (null == f) return Epoch.error("Query CSS cannot match given selector: " + a);
@@ -422,7 +426,7 @@
             null != f && (b.className = f.substr(1).replace(/\./g, " "));
             return b
         };
-        g.log = function(a) {
+        g.log = function (a) {
             return d = a
         };
         g.cache = {};
@@ -430,10 +434,10 @@
             "stroke-width"
         ];
         g.container = null;
-        g.purge = function() {
+        g.purge = function () {
             return g.cache = {}
         };
-        g.getContainer = function() {
+        g.getContainer = function () {
             var a;
             if (null != g.container) return g.container;
             a = document.createElement("DIV");
@@ -441,20 +445,20 @@
             document.body.appendChild(a);
             return g.container = d3.select(a)
         };
-        g.hash = function(a, f) {
+        g.hash = function (a, f) {
             var d;
             d = f.attr("data-epoch-container-id");
             null == d && (d = b(), f.attr("data-epoch-container-id", d));
             return "" + d + "__" + a
         };
-        g.getStyles = function(a, f) {
+        g.getStyles = function (a, f) {
             var b, c, m, l, n, e, r;
             c = g.hash(a, f);
             b = g.cache[c];
             if (null != b) return b;
             m = [];
             for (b =
-                f.node().parentNode; null != b && "body" !== b.nodeName.toLowerCase();) m.unshift(b), b = b.parentNode;
+                f.node().parentNode; null != b && "body" !== b.nodeName.toLowerCase() ;) m.unshift(b), b = b.parentNode;
             m.push(f.node());
             b = [];
             e = 0;
@@ -464,7 +468,7 @@
             l = 0;
             for (n = e.length; l < n; l++) m = e[l], b.push(m);
             d && console.log(b);
-            for (l = n = h(b.shift()); b.length;) m = h(b.shift()), l.appendChild(m), l = m;
+            for (l = n = h(b.shift()) ; b.length;) m = h(b.shift()), l.appendChild(m), l = m;
             d && console.log(n);
             g.getContainer().node().appendChild(n);
             m = d3.select("#_canvas_css_reference " + a);
@@ -480,9 +484,9 @@
     }();
     Epoch.QueryCSS = e
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -492,7 +496,7 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Chart.Plot = function(c) {
+    Epoch.Chart.Plot = function (c) {
         function a(k) {
             var f, c, u;
             this.options = null != k ? k : {};
@@ -548,57 +552,57 @@
             "option:domain": "domainChanged",
             "option:range": "rangeChanged"
         };
-        a.prototype.setTickFormat = function(a, f) {
+        a.prototype.setTickFormat = function (a, f) {
             return this.options.tickFormats[a] = f
         };
-        a.prototype.hasAxis = function(a) {
+        a.prototype.hasAxis = function (a) {
             return -1 < this.options.axes.indexOf(a)
         };
-        a.prototype.innerWidth = function() {
+        a.prototype.innerWidth = function () {
             return this.width - (this.margins.left + this.margins.right)
         };
-        a.prototype.innerHeight = function() {
+        a.prototype.innerHeight = function () {
             return this.height - (this.margins.top + this.margins.bottom)
         };
-        a.prototype.x = function() {
+        a.prototype.x = function () {
             var a, f;
-            a = null != (f = this.options.domain) ? f : this.extent(function(a) {
+            a = null != (f = this.options.domain) ? f : this.extent(function (a) {
                 return a.x
             });
             return d3.scale.linear().domain(a).range([0,
                 this.innerWidth()
             ])
         };
-        a.prototype.y = function() {
+        a.prototype.y = function () {
             var a, f;
-            a = null != (f = this.options.range) ? f : this.extent(function(a) {
+            a = null != (f = this.options.range) ? f : this.extent(function (a) {
                 return a.y
             });
             return d3.scale.linear().domain(a).range([this.innerHeight(), 0])
         };
-        a.prototype.bottomAxis = function() {
+        a.prototype.bottomAxis = function () {
             return d3.svg.axis().scale(this.x()).orient("bottom").ticks(this.options.ticks.bottom).tickFormat(this.options.tickFormats.bottom)
         };
-        a.prototype.topAxis = function() {
+        a.prototype.topAxis = function () {
             return d3.svg.axis().scale(this.x()).orient("top").ticks(this.options.ticks.top).tickFormat(this.options.tickFormats.top)
         };
-        a.prototype.leftAxis = function() {
+        a.prototype.leftAxis = function () {
             return d3.svg.axis().scale(this.y()).orient("left").ticks(this.options.ticks.left).tickFormat(this.options.tickFormats.left)
         };
-        a.prototype.rightAxis = function() {
+        a.prototype.rightAxis = function () {
             return d3.svg.axis().scale(this.y()).orient("right").ticks(this.options.ticks.right).tickFormat(this.options.tickFormats.right)
         };
-        a.prototype.draw = function() {
+        a.prototype.draw = function () {
             this._axesDrawn ? this._redrawAxes() : this._drawAxes();
             return a.__super__.draw.call(this)
         };
-        a.prototype._redrawAxes = function() {
+        a.prototype._redrawAxes = function () {
             this.hasAxis("bottom") && this.g.selectAll(".x.axis.bottom").transition().duration(500).ease("linear").call(this.bottomAxis());
             this.hasAxis("top") && this.g.selectAll(".x.axis.top").transition().duration(500).ease("linear").call(this.topAxis());
             this.hasAxis("left") && this.g.selectAll(".y.axis.left").transition().duration(500).ease("linear").call(this.leftAxis());
             if (this.hasAxis("right")) return this.g.selectAll(".y.axis.right").transition().duration(500).ease("linear").call(this.rightAxis())
         };
-        a.prototype._drawAxes = function() {
+        a.prototype._drawAxes = function () {
             this.hasAxis("bottom") && this.g.append("g").attr("class", "x axis bottom").attr("transform", "translate(0, " +
                 this.innerHeight() + ")").call(this.bottomAxis());
             this.hasAxis("top") && this.g.append("g").attr("class", "x axis top").call(this.topAxis());
@@ -606,13 +610,13 @@
             this.hasAxis("right") && this.g.append("g").attr("class", "y axis right").attr("transform", "translate(" + this.innerWidth() + ", 0)").call(this.rightAxis());
             return this._axesDrawn = !0
         };
-        a.prototype.dimensionsChanged = function() {
+        a.prototype.dimensionsChanged = function () {
             a.__super__.dimensionsChanged.call(this);
             this.g.selectAll(".axis").remove();
             this._axesDrawn = !1;
             return this.draw()
         };
-        a.prototype.marginsChanged = function() {
+        a.prototype.marginsChanged = function () {
             var a, f, b;
             if (null != this.options.margins) {
                 b = this.options.margins;
@@ -621,7 +625,7 @@
                 return this.draw()
             }
         };
-        a.prototype.axesChanged = function() {
+        a.prototype.axesChanged = function () {
             var a, f, b, c;
             c = ["top", "right", "bottom", "left"];
             f = 0;
@@ -633,24 +637,24 @@
             this._axesDrawn = !1;
             return this.draw()
         };
-        a.prototype.ticksChanged = function() {
+        a.prototype.ticksChanged = function () {
             return this.draw()
         };
-        a.prototype.tickFormatsChanged = function() {
+        a.prototype.tickFormatsChanged = function () {
             return this.draw()
         };
-        a.prototype.domainChanged = function() {
+        a.prototype.domainChanged = function () {
             return this.draw()
         };
-        a.prototype.rangeChanged = function() {
+        a.prototype.rangeChanged = function () {
             return this.draw()
         };
         return a
     }(Epoch.Chart.SVG)
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -660,12 +664,12 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Chart.Area = function(c) {
+    Epoch.Chart.Area = function (c) {
         function a() {
             return a.__super__.constructor.apply(this, arguments)
         }
         g(a, c);
-        a.prototype.y = function() {
+        a.prototype.y = function () {
             var a, b, c, k, f, q, u, m;
             a = [];
             q = this.data;
@@ -675,32 +679,32 @@
             return d3.scale.linear().domain(null !=
                 (m = this.options.range) ? m : [0, d3.max(a)]).range([this.height - this.margins.top - this.margins.bottom, 0])
         };
-        a.prototype.draw = function() {
+        a.prototype.draw = function () {
             var d, b, c, k;
             b = [this.x(), this.y()];
             c = b[0];
             k = b[1];
-            d = d3.svg.area().x(function(a) {
+            d = d3.svg.area().x(function (a) {
                 return c(a.x)
-            }).y0(function(a) {
+            }).y0(function (a) {
                 return k(a.y0)
-            }).y1(function(a) {
+            }).y1(function (a) {
                 return k(a.y0 + a.y)
             });
-            d3.layout.stack().values(function(a) {
+            d3.layout.stack().values(function (a) {
                 return a.values
             })(this.data);
             this.g.selectAll(".layer").remove();
-            b = this.g.selectAll(".layer").data(this.data, function(a) {
+            b = this.g.selectAll(".layer").data(this.data, function (a) {
                 return a.category
             });
-            b.select(".area").attr("d", function(a) {
+            b.select(".area").attr("d", function (a) {
                 return d(a.values)
             });
-            b.enter().append("g").attr("class", function(a) {
+            b.enter().append("g").attr("class", function (a) {
                 return a.className
             });
-            b.append("path").attr("class", "area").attr("d", function(a) {
+            b.append("path").attr("class", "area").attr("d", function (a) {
                 return d(a.values)
             });
             return a.__super__.draw.call(this)
@@ -708,9 +712,9 @@
         return a
     }(Epoch.Chart.Plot)
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -720,7 +724,7 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Chart.Bar = function(c) {
+    Epoch.Chart.Bar = function (c) {
         function a(k) {
             this.options = null != k ? k : {};
             this.options = "horizontal" === this.options.orientation ? Epoch.Util.defaults(this.options, b) : Epoch.Util.defaults(this.options, d);
@@ -759,18 +763,18 @@
             "option:outerPadding:group": "paddingChanged"
         };
         a.prototype.x =
-            function() {
+            function () {
                 var a;
                 if ("vertical" === this.options.orientation) return d3.scale.ordinal().domain(Epoch.Util.domain(this.data)).rangeRoundBands([0, this.innerWidth()], this.options.padding.group, this.options.outerPadding.group);
-                a = this.extent(function(a) {
+                a = this.extent(function (a) {
                     return a.y
                 });
                 a[0] = Math.min(0, a[0]);
                 return d3.scale.linear().domain(a).range([0, this.width - this.margins.left - this.margins.right])
             };
-        a.prototype.x1 = function(a) {
+        a.prototype.x1 = function (a) {
             var f;
-            return d3.scale.ordinal().domain(function() {
+            return d3.scale.ordinal().domain(function () {
                 var a, k, b, d;
                 b = this.data;
                 d = [];
@@ -780,15 +784,15 @@
                 return d
             }.call(this)).rangeRoundBands([0, a.rangeBand()], this.options.padding.bar, this.options.outerPadding.bar)
         };
-        a.prototype.y = function() {
+        a.prototype.y = function () {
             var a;
-            return "vertical" === this.options.orientation ? (a = this.extent(function(a) {
+            return "vertical" === this.options.orientation ? (a = this.extent(function (a) {
                 return a.y
             }), a[0] = Math.min(0, a[0]), d3.scale.linear().domain(a).range([this.height - this.margins.top - this.margins.bottom, 0])) : d3.scale.ordinal().domain(Epoch.Util.domain(this.data)).rangeRoundBands([0, this.innerHeight()], this.options.padding.group, this.options.outerPadding.group)
         };
-        a.prototype.y1 = function(a) {
+        a.prototype.y1 = function (a) {
             var f;
-            return d3.scale.ordinal().domain(function() {
+            return d3.scale.ordinal().domain(function () {
                 var a, k, b, d;
                 b = this.data;
                 d = [];
@@ -797,7 +801,7 @@
                 return d
             }.call(this)).rangeRoundBands([0, a.rangeBand()], this.options.padding.bar, this.options.outerPadding.bar)
         };
-        a.prototype._remapData = function() {
+        a.prototype._remapData = function () {
             var a, f, b, d, c, h, n, e, g, s, t, v;
             c = {};
             t = this.data;
@@ -816,11 +820,11 @@
             });
             return f
         };
-        a.prototype.draw = function() {
+        a.prototype.draw = function () {
             "horizontal" === this.options.orientation ? this._drawHorizontal() : this._drawVertical();
             return a.__super__.draw.call(this)
         };
-        a.prototype._drawVertical = function() {
+        a.prototype._drawVertical = function () {
             var a, b, d, c, h, l;
             a = [this.x(), this.y()];
             c = a[0];
@@ -828,80 +832,80 @@
             h = this.x1(c);
             b = this.height - this.margins.top - this.margins.bottom;
             a = this._remapData();
-            a = this.g.selectAll(".layer").data(a, function(a) {
+            a = this.g.selectAll(".layer").data(a, function (a) {
                 return a.group
             });
             a.transition().duration(750).attr("transform",
-                function(a) {
+                function (a) {
                     return "translate(" + c(a.group) + ", 0)"
                 });
-            a.enter().append("g").attr("class", "layer").attr("transform", function(a) {
+            a.enter().append("g").attr("class", "layer").attr("transform", function (a) {
                 return "translate(" + c(a.group) + ", 0)"
             });
-            d = a.selectAll("rect").data(function(a) {
+            d = a.selectAll("rect").data(function (a) {
                 return a.values
             });
-            d.transition().duration(600).attr("x", function(a) {
+            d.transition().duration(600).attr("x", function (a) {
                 return h(a.label)
-            }).attr("y", function(a) {
+            }).attr("y", function (a) {
                 return l(a.y)
-            }).attr("width", h.rangeBand()).attr("height", function(a) {
+            }).attr("width", h.rangeBand()).attr("height", function (a) {
                 return b - l(a.y)
             });
-            d.enter().append("rect").attr("class", function(a) {
+            d.enter().append("rect").attr("class", function (a) {
                 return a.className
-            }).attr("x", function(a) {
+            }).attr("x", function (a) {
                 return h(a.label)
             }).attr("y",
-                function(a) {
+                function (a) {
                     return l(a.y)
-                }).attr("width", h.rangeBand()).attr("height", function(a) {
-                return b - l(a.y)
-            });
+                }).attr("width", h.rangeBand()).attr("height", function (a) {
+                    return b - l(a.y)
+                });
             d.exit().transition().duration(150).style("opacity", "0").remove();
             return a.exit().transition().duration(750).style("opacity", "0").remove()
         };
-        a.prototype._drawHorizontal = function() {
+        a.prototype._drawHorizontal = function () {
             var a, b, d, c, h;
             a = [this.x(), this.y()];
             d = a[0];
             c = a[1];
             h = this.y1(c);
             a = this._remapData();
-            a = this.g.selectAll(".layer").data(a, function(a) {
+            a = this.g.selectAll(".layer").data(a, function (a) {
                 return a.group
             });
-            a.transition().duration(750).attr("transform", function(a) {
+            a.transition().duration(750).attr("transform", function (a) {
                 return "translate(0, " +
                     c(a.group) + ")"
             });
-            a.enter().append("g").attr("class", "layer").attr("transform", function(a) {
+            a.enter().append("g").attr("class", "layer").attr("transform", function (a) {
                 return "translate(0, " + c(a.group) + ")"
             });
-            b = a.selectAll("rect").data(function(a) {
+            b = a.selectAll("rect").data(function (a) {
                 return a.values
             });
-            b.transition().duration(600).attr("x", function(a) {
+            b.transition().duration(600).attr("x", function (a) {
                 return 0
-            }).attr("y", function(a) {
+            }).attr("y", function (a) {
                 return h(a.label)
-            }).attr("height", h.rangeBand()).attr("width", function(a) {
+            }).attr("height", h.rangeBand()).attr("width", function (a) {
                 return d(a.y)
             });
-            b.enter().append("rect").attr("class", function(a) {
+            b.enter().append("rect").attr("class", function (a) {
                 return a.className
-            }).attr("x", function(a) {
+            }).attr("x", function (a) {
                 return 0
-            }).attr("y", function(a) {
+            }).attr("y", function (a) {
                 return h(a.label)
             }).attr("height",
-                h.rangeBand()).attr("width", function(a) {
-                return d(a.y)
-            });
+                h.rangeBand()).attr("width", function (a) {
+                    return d(a.y)
+                });
             b.exit().transition().duration(150).style("opacity", "0").remove();
             return a.exit().transition().duration(750).style("opacity", "0").remove()
         };
-        a.prototype.orientationChanged = function() {
+        a.prototype.orientationChanged = function () {
             var a, b, d, c;
             c = this.options.tickFormats.top;
             a = this.options.tickFormats.bottom;
@@ -914,15 +918,15 @@
                 d;
             return this.draw()
         };
-        a.prototype.paddingChanged = function() {
+        a.prototype.paddingChanged = function () {
             return this.draw()
         };
         return a
     }(Epoch.Chart.Plot)
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -932,39 +936,39 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Chart.Line = function(c) {
+    Epoch.Chart.Line = function (c) {
         function a() {
             return a.__super__.constructor.apply(this, arguments)
         }
         g(a, c);
-        a.prototype.line = function() {
+        a.prototype.line = function () {
             var a, b, c;
             c = [this.x(), this.y()];
             a = c[0];
             b = c[1];
-            return d3.svg.line().x(function(b) {
-                return function(b) {
+            return d3.svg.line().x(function (b) {
+                return function (b) {
                     return a(b.x)
                 }
-            }(this)).y(function(a) {
-                return function(a) {
+            }(this)).y(function (a) {
+                return function (a) {
                     return b(a.y)
                 }
             }(this))
         };
         a.prototype.draw =
-            function() {
+            function () {
                 var c, b;
                 b = [this.x(), this.y(), this.line()][2];
-                c = this.g.selectAll(".layer").data(this.data, function(a) {
+                c = this.g.selectAll(".layer").data(this.data, function (a) {
                     return a.category
                 });
-                c.select(".line").transition().duration(500).attr("d", function(a) {
+                c.select(".line").transition().duration(500).attr("d", function (a) {
                     return b(a.values)
                 });
-                c.enter().append("g").attr("class", function(a) {
+                c.enter().append("g").attr("class", function (a) {
                     return a.className
-                }).append("path").attr("class", "line").attr("d", function(a) {
+                }).append("path").attr("class", "line").attr("d", function (a) {
                     return b(a.values)
                 });
                 c.exit().transition().duration(750).style("opacity", "0").remove();
@@ -973,9 +977,9 @@
         return a
     }(Epoch.Chart.Plot)
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -985,20 +989,20 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Chart.Pie = function(c) {
+    Epoch.Chart.Pie = function (c) {
         function a(b) {
             this.options = null != b ? b : {};
             a.__super__.constructor.call(this, this.options = Epoch.Util.defaults(this.options, d));
-            this.pie = d3.layout.pie().sort(null).value(function(a) {
+            this.pie = d3.layout.pie().sort(null).value(function (a) {
                 return a.value
             });
-            this.arc = d3.svg.arc().outerRadius(function(a) {
-                return function() {
+            this.arc = d3.svg.arc().outerRadius(function (a) {
+                return function () {
                     return Math.max(a.width,
                         a.height) / 2 - a.options.margin
                 }
-            }(this)).innerRadius(function(a) {
-                return function() {
+            }(this)).innerRadius(function (a) {
+                return function () {
                     return a.options.inner
                 }
             }(this));
@@ -1012,49 +1016,49 @@
             margin: 10,
             inner: 0
         };
-        a.prototype.draw = function() {
+        a.prototype.draw = function () {
             var b;
             this.g.selectAll(".arc").remove();
-            b = this.g.selectAll(".arc").data(this.pie(this.data), function(a) {
+            b = this.g.selectAll(".arc").data(this.pie(this.data), function (a) {
                 return a.data.category
             });
             b.enter().append("g").attr("class",
-                function(a) {
+                function (a) {
                     return "arc pie " + a.data.className
                 });
             b.select("path").attr("d", this.arc);
-            b.select("text").attr("transform", function(a) {
-                return function(b) {
+            b.select("text").attr("transform", function (a) {
+                return function (b) {
                     return "translate(" + a.arc.centroid(b) + ")"
                 }
-            }(this)).text(function(a) {
+            }(this)).text(function (a) {
                 return a.data.label || a.data.category
             });
-            b.append("path").attr("d", this.arc).each(function(a) {
+            b.append("path").attr("d", this.arc).each(function (a) {
                 return this._current = a
             });
-            b.append("text").attr("transform", function(a) {
-                return function(b) {
+            b.append("text").attr("transform", function (a) {
+                return function (b) {
                     return "translate(" + a.arc.centroid(b) + ")"
                 }
-            }(this)).attr("dy", ".35em").style("text-anchor", "middle").text(function(a) {
+            }(this)).attr("dy", ".35em").style("text-anchor", "middle").text(function (a) {
                 return a.data.label ||
                     a.data.category
             });
             return a.__super__.draw.call(this)
         };
-        a.prototype.marginChanged = function() {
+        a.prototype.marginChanged = function () {
             return this.draw()
         };
-        a.prototype.innerChanged = function() {
+        a.prototype.innerChanged = function () {
             return this.draw()
         };
         return a
     }(Epoch.Chart.SVG)
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -1064,7 +1068,7 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Chart.Scatter = function(c) {
+    Epoch.Chart.Scatter = function (c) {
         function a(b) {
             this.options = null != b ? b : {};
             a.__super__.constructor.call(this, this.options = Epoch.Util.defaults(this.options, d));
@@ -1076,52 +1080,52 @@
             radius: 3.5,
             axes: ["top", "bottom", "left", "right"]
         };
-        a.prototype.draw = function() {
+        a.prototype.draw = function () {
             var b, c, k, f,
                 d;
             b = [this.x(), this.y()];
             f = b[0];
             d = b[1];
             k = this.options.radius;
-            c = this.g.selectAll(".layer").data(this.data, function(a) {
+            c = this.g.selectAll(".layer").data(this.data, function (a) {
                 return a.category
             });
-            c.enter().append("g").attr("class", function(a) {
+            c.enter().append("g").attr("class", function (a) {
                 return a.className
             });
-            b = c.selectAll(".dot").data(function(a) {
+            b = c.selectAll(".dot").data(function (a) {
                 return a.values
             });
-            b.transition().duration(500).attr("r", function(a) {
+            b.transition().duration(500).attr("r", function (a) {
                 var b;
                 return null != (b = a.r) ? b : k
-            }).attr("cx", function(a) {
+            }).attr("cx", function (a) {
                 return f(a.x)
-            }).attr("cy", function(a) {
+            }).attr("cy", function (a) {
                 return d(a.y)
             });
-            b.enter().append("circle").attr("class", "dot").attr("r", function(a) {
+            b.enter().append("circle").attr("class", "dot").attr("r", function (a) {
                 var b;
                 return null !=
                     (b = a.r) ? b : k
-            }).attr("cx", function(a) {
+            }).attr("cx", function (a) {
                 return f(a.x)
-            }).attr("cy", function(a) {
+            }).attr("cy", function (a) {
                 return d(a.y)
             });
             b.exit().transition().duration(750).style("opacity", 0).remove();
             c.exit().transition().duration(750).style("opacity", 0).remove();
             return a.__super__.draw.call(this)
         };
-        a.prototype.radiusChanged = function() {
+        a.prototype.radiusChanged = function () {
             return this.draw()
         };
         return a
     }(Epoch.Chart.Plot)
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -1131,7 +1135,7 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Time.Plot = function(c) {
+    Epoch.Time.Plot = function (c) {
         function a(k) {
             var f, c, u;
             this.options = k;
@@ -1153,14 +1157,14 @@
             this.animation = {
                 interval: null,
                 active: !1,
-                delta: function(a) {
-                    return function() {
+                delta: function (a) {
+                    return function () {
                         return -(a.w() /
                             a.options.fps)
                     }
                 }(this),
-                tickDelta: function(a) {
-                    return function() {
+                tickDelta: function (a) {
+                    return function () {
                         return -(a.w() / a.pixelRatio / a.options.fps)
                     }
                 }(this),
@@ -1168,8 +1172,8 @@
                 duration: this.options.fps
             };
             this._buildAxes();
-            this.animationCallback = function(a) {
-                return function() {
+            this.animationCallback = function (a) {
+                return function () {
                     return a._animate()
                 }
             }(this);
@@ -1219,7 +1223,7 @@
             "option:tickFormats.bottom": "tickFormatsChanged",
             "option:tickFormats.left": "tickFormatsChanged"
         };
-        a.prototype._sizeCanvas = function() {
+        a.prototype._sizeCanvas = function () {
             this.canvas.attr({
                 width: this.innerWidth(),
                 height: this.innerHeight()
@@ -1231,22 +1235,22 @@
                 left: "" + this.margins.left + "px"
             })
         };
-        a.prototype._buildAxes = function() {
+        a.prototype._buildAxes = function () {
             this.svg.selectAll(".axis").remove();
             this._prepareTimeAxes();
             return this._prepareRangeAxes()
         };
-        a.prototype.setData = function(a) {
+        a.prototype.setData = function (a) {
             var b, c, d, h, e;
             this.data = [];
             e = [];
             for (d in a) h = a[d], c = Epoch.Util.copy(h), b = Math.max(0, h.values.length - this.options.historySize), c.values = h.values.slice(b), b = ["layer"], b.push("category" + ((d | 0) + 1)), null != h.label && b.push(Epoch.Util.dasherize(h.label)), c.className = b.join(" "), e.push(this.data.push(c));
             return e
         };
-        a.prototype._offsetX = function() {
+        a.prototype._offsetX = function () {
             return 0
         };
-        a.prototype._prepareTimeAxes = function() {
+        a.prototype._prepareTimeAxes = function () {
             var a;
             this.hasAxis("bottom") &&
                 (a = this.bottomAxis = this.svg.append("g").attr("class", "x axis bottom canvas").attr("transform", "translate(" + (this.margins.left - 1) + ", " + (this.innerHeight() / this.pixelRatio + this.margins.top) + ")"), a.append("path").attr("class", "domain").attr("d", "M0,0H" + (this.innerWidth() / this.pixelRatio + 1)));
@@ -1254,7 +1258,7 @@
                 "M0,0H" + (this.innerWidth() / this.pixelRatio + 1)));
             return this._resetInitialTimeTicks()
         };
-        a.prototype._resetInitialTimeTicks = function() {
+        a.prototype._resetInitialTimeTicks = function () {
             var a, b, c, d, h;
             d = this.options.ticks.time;
             this._ticks = [];
@@ -1273,49 +1277,49 @@
                 }
             return []
         };
-        a.prototype._prepareRangeAxes = function() {
+        a.prototype._prepareRangeAxes = function () {
             this.hasAxis("left") && this.svg.append("g").attr("class", "y axis left").attr("transform", "translate(" + (this.margins.left - 1) + ", " + this.margins.top + ")").call(this.leftAxis());
             if (this.hasAxis("right")) return this.svg.append("g").attr("class", "y axis right").attr("transform", "translate(" + (this.width - this.margins.right) + ", " + this.margins.top + ")").call(this.rightAxis())
         };
-        a.prototype.leftAxis = function() {
+        a.prototype.leftAxis = function () {
             var a, b;
             b = this.options.ticks.left;
             a = d3.svg.axis().scale(this.ySvg()).orient("left").tickFormat(this.options.tickFormats.left);
-            return 2 === b ? a.tickValues(this.extent(function(a) {
+            return 2 === b ? a.tickValues(this.extent(function (a) {
                 return a.y
             })) : a.ticks(b)
         };
-        a.prototype.rightAxis = function() {
+        a.prototype.rightAxis = function () {
             var a, b;
-            this.extent(function(a) {
+            this.extent(function (a) {
                 return a.y
             });
             b = this.options.ticks.right;
             a = d3.svg.axis().scale(this.ySvg()).orient("right").tickFormat(this.options.tickFormats.left);
-            return 2 === b ? a.tickValues(this.extent(function(a) {
+            return 2 === b ? a.tickValues(this.extent(function (a) {
                 return a.y
             })) : a.ticks(b)
         };
-        a.prototype.hasAxis = function(a) {
+        a.prototype.hasAxis = function (a) {
             return -1 < this.options.axes.indexOf(a)
         };
-        a.prototype.innerWidth = function() {
+        a.prototype.innerWidth = function () {
             return (this.width - (this.margins.left + this.margins.right)) * this.pixelRatio
         };
-        a.prototype.innerHeight = function() {
+        a.prototype.innerHeight = function () {
             return (this.height - (this.margins.top + this.margins.bottom)) * this.pixelRatio
         };
-        a.prototype._prepareEntry = function(a) {
+        a.prototype._prepareEntry = function (a) {
             return a
         };
-        a.prototype._prepareLayers = function(a) {
+        a.prototype._prepareLayers = function (a) {
             return a
         };
-        a.prototype._startTransition = function() {
+        a.prototype._startTransition = function () {
             if (!0 !== this.animation.active && 0 !== this._queue.length) return this.trigger("transition:start"), this._shift(), this.animation.active = !0, this.animation.interval =
                 setInterval(this.animationCallback, speedFactor / this.options.fps)
         };
-        a.prototype._stopTransition = function() {
+        a.prototype._stopTransition = function () {
             var a, b, c, d;
             if (this.inTransition()) {
                 d = this.data;
@@ -1333,22 +1337,22 @@
                 return clearInterval(this.animation.interval)
             }
         };
-        a.prototype.inTransition = function() {
+        a.prototype.inTransition = function () {
             return this.animation.active
         };
-        a.prototype.push = function(a) {
+        a.prototype.push = function (a) {
             a = this._prepareLayers(a);
             this._queue.length > this.options.queueSize && this._queue.splice(this.options.queueSize, this._queue.length - this.options.queueSize);
             if (this._queue.length === this.options.queueSize) return !1;
-            this._queue.push(a.map(function(a) {
-                return function(b) {
+            this._queue.push(a.map(function (a) {
+                return function (b) {
                     return a._prepareEntry(b)
                 }
             }(this)));
             this.trigger("push");
             if (!this.inTransition()) return this._startTransition()
         };
-        a.prototype._shift = function() {
+        a.prototype._shift = function () {
             var a, b, c, d;
             this.trigger("before:shift");
             a = this._queue.shift();
@@ -1358,48 +1362,48 @@
             this._transitionRangeAxes();
             return this.trigger("after:shift")
         };
-        a.prototype._transitionRangeAxes = function() {
+        a.prototype._transitionRangeAxes = function () {
             this.hasAxis("left") && this.svg.selectAll(".y.axis.left").transition().duration(500).ease("linear").call(this.leftAxis());
             if (this.hasAxis("right")) return this.svg.selectAll(".y.axis.right").transition().duration(500).ease("linear").call(this.rightAxis())
         };
-        a.prototype._animate = function() {
+        a.prototype._animate = function () {
             if (this.inTransition()) return ++this.animation.frame === this.animation.duration && this._stopTransition(), this.draw(this.animation.frame * this.animation.delta()), this._updateTimeAxes()
         };
-        a.prototype.y = function() {
-            return d3.scale.linear().domain(this.extent(function(a) {
+        a.prototype.y = function () {
+            return d3.scale.linear().domain(this.extent(function (a) {
                 return a.y
             })).range([this.innerHeight(), 0])
         };
-        a.prototype.ySvg = function() {
-            return d3.scale.linear().domain(this.extent(function(a) {
+        a.prototype.ySvg = function () {
+            return d3.scale.linear().domain(this.extent(function (a) {
                 return a.y
             })).range([this.innerHeight() / this.pixelRatio, 0])
         };
-        a.prototype.w = function() {
+        a.prototype.w = function () {
             return this.innerWidth() /
                 this.options.windowSize
         };
-        a.prototype._updateTicks = function(a) {
+        a.prototype._updateTicks = function (a) {
             if (this.hasAxis("top") || this.hasAxis("bottom"))
                 if (++this._tickTimer % this.options.ticks.time || this._pushTick(this.options.windowSize, a, !0), !(0 <= this._ticks[0].x - this.w() / this.pixelRatio)) return this._ticks[0].exit = !0
         };
-        a.prototype._pushTick = function(a, b, c, d) {
+        a.prototype._pushTick = function (a, b, c, d) {
             null == c && (c = !1);
             null == d && (d = !1);
             if (this.hasAxis("top") || this.hasAxis("bottom")) return b = {
-                    time: b,
-                    x: a * (this.w() / this.pixelRatio) + this._offsetX(),
-                    opacity: c ? 0 : 1,
-                    enter: c ? !0 : !1,
-                    exit: !1
-                }, this.hasAxis("bottom") &&
+                time: b,
+                x: a * (this.w() / this.pixelRatio) + this._offsetX(),
+                opacity: c ? 0 : 1,
+                enter: c ? !0 : !1,
+                exit: !1
+            }, this.hasAxis("bottom") &&
                 (a = this.bottomAxis.append("g").attr("class", "tick major").attr("transform", "translate(" + (b.x + 1) + ",0)").style("opacity", b.opacity), a.append("line").attr("y2", 6), a.append("text").attr("text-anchor", "middle").attr("dy", 19).text(this.options.tickFormats.bottom(b.time)), b.bottomEl = a), this.hasAxis("top") && (a = this.topAxis.append("g").attr("class", "tick major").attr("transform", "translate(" + (b.x + 1) + ",0)").style("opacity", b.opacity), a.append("line").attr("y2", -6), a.append("text").attr("text-anchor", "middle").attr("dy", -10).text(this.options.tickFormats.top(b.time)), b.topEl = a), d ? this._ticks.unshift(b) : this._ticks.push(b), b
         };
-        a.prototype._shiftTick = function() {
+        a.prototype._shiftTick = function () {
             var a;
             if (0 < this._ticks.length && (a = this._ticks.shift(), null != a.topEl && a.topEl.remove(), null != a.bottomEl)) return a.bottomEl.remove()
         };
-        a.prototype._updateTimeAxes = function() {
+        a.prototype._updateTimeAxes = function () {
             var a, b, c, d, h, e, g;
             if (this.hasAxis("top") || this.hasAxis("bottom")) {
                 a = [this.animation.tickDelta(), 1 / this.options.fps];
@@ -1413,17 +1417,17 @@
                 return g
             }
         };
-        a.prototype.draw = function(b) {
+        a.prototype.draw = function (b) {
             return a.__super__.draw.call(this)
         };
-        a.prototype.dimensionsChanged = function() {
+        a.prototype.dimensionsChanged = function () {
             a.__super__.dimensionsChanged.call(this);
             this.svg.attr("width", this.width).attr("height", this.height);
             this._sizeCanvas();
             this._buildAxes();
             return this.draw(this.animation.frame * this.animation.delta())
         };
-        a.prototype.axesChanged = function() {
+        a.prototype.axesChanged = function () {
             var a, b, c, h;
             h = ["top", "right", "bottom", "left"];
             b = 0;
@@ -1434,17 +1438,17 @@
             return this.draw(this.animation.frame * this.animation.delta())
         };
         a.prototype.ticksChanged =
-            function() {
+            function () {
                 this._resetInitialTimeTicks();
                 this._transitionRangeAxes();
                 return this.draw(this.animation.frame * this.animation.delta())
             };
-        a.prototype.tickFormatsChanged = function() {
+        a.prototype.tickFormatsChanged = function () {
             this._resetInitialTimeTicks();
             this._transitionRangeAxes();
             return this.draw(this.animation.frame * this.animation.delta())
         };
-        a.prototype.marginsChanged = function() {
+        a.prototype.marginsChanged = function () {
             var a, b, c;
             if (null != this.options.margins) {
                 c = this.options.margins;
@@ -1455,23 +1459,23 @@
         };
         return a
     }(Epoch.Chart.Canvas);
-    Epoch.Time.Stack = function(c) {
+    Epoch.Time.Stack = function (c) {
         function a() {
             return a.__super__.constructor.apply(this, arguments)
         }
         g(a, c);
-        a.prototype._prepareLayers = function(a) {
+        a.prototype._prepareLayers = function (a) {
             var b, c, k, f;
             k = c = 0;
             for (f = a.length; k < f; k++) b = a[k], b.y0 = c, c += b.y;
             return a
         };
-        a.prototype.setData = function(c) {
+        a.prototype.setData = function (c) {
             var b, h, k, f, e;
             a.__super__.setData.call(this, c);
             e = [];
             b = c = 0;
-            for (f = this.data[0].values.length; 0 <= f ? c < f : c > f; b = 0 <= f ? ++c : --c) k = 0, e.push(function() {
+            for (f = this.data[0].values.length; 0 <= f ? c < f : c > f; b = 0 <= f ? ++c : --c) k = 0, e.push(function () {
                 var a, c, d, f;
                 d = this.data;
                 f = [];
@@ -1482,7 +1486,7 @@
             }.call(this));
             return e
         };
-        a.prototype.extent = function() {
+        a.prototype.extent = function () {
             var a, b, c, k, f, e, g, m;
             a = f = c = 0;
             for (g = this.data[0].values.length; 0 <= g ? f < g : f > g; a = 0 <= g ? ++f : --f) {
@@ -1495,9 +1499,9 @@
         return a
     }(Epoch.Time.Plot)
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -1507,19 +1511,19 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Time.Area = function(c) {
+    Epoch.Time.Area = function (c) {
         function a() {
             return a.__super__.constructor.apply(this, arguments)
         }
         g(a, c);
-        a.prototype.setStyles = function(a) {
+        a.prototype.setStyles = function (a) {
             a = null != a.className ? this.getStyles("g." + a.className.replace(/\s/g, ".") + " path.area") : this.getStyles("g path.area");
             this.ctx.fillStyle = a.fill;
             null != a.stroke && (this.ctx.strokeStyle =
                 a.stroke);
             if (null != a["stroke-width"]) return this.ctx.lineWidth = a["stroke-width"].replace("px", "")
         };
-        a.prototype._drawAreas = function(a) {
+        a.prototype._drawAreas = function (a) {
             var b, c, k, f, e, g, m, l, n, p;
             null == a && (a = 0);
             g = [this.y(), this.w()];
@@ -1533,7 +1537,7 @@
                 e = [this.options.windowSize, f.values.length, this.inTransition()];
                 c = e[0];
                 k = e[1];
-                for (e = e[2]; - 2 <= --c && 0 <= --k;) b = f.values[k], b = [(c + 1) * g + a, m(b.y + b.y0)], e && (b[0] += g), c === this.options.windowSize -
+                for (e = e[2]; -2 <= --c && 0 <= --k;) b = f.values[k], b = [(c + 1) * g + a, m(b.y + b.y0)], e && (b[0] += g), c === this.options.windowSize -
                     1 ? this.ctx.moveTo.apply(this.ctx, b) : this.ctx.lineTo.apply(this.ctx, b);
                 c = e ? (c + 3) * g + a : (c + 2) * g + a;
                 this.ctx.lineTo(c, this.innerHeight());
@@ -1543,7 +1547,7 @@
             }
             return p
         };
-        a.prototype._drawStrokes = function(a) {
+        a.prototype._drawStrokes = function (a) {
             var b, c, k, f, e, g, m, l, n, p;
             null == a && (a = 0);
             c = [this.y(), this.w()];
@@ -1559,12 +1563,12 @@
                 ];
                 c = e[0];
                 k = e[1];
-                for (e = e[2]; - 2 <= --c && 0 <= --k;) b = f.values[k], b = [(c + 1) * g + a, m(b.y + b.y0)], e && (b[0] += g), c === this.options.windowSize - 1 ? this.ctx.moveTo.apply(this.ctx, b) : this.ctx.lineTo.apply(this.ctx, b);
+                for (e = e[2]; -2 <= --c && 0 <= --k;) b = f.values[k], b = [(c + 1) * g + a, m(b.y + b.y0)], e && (b[0] += g), c === this.options.windowSize - 1 ? this.ctx.moveTo.apply(this.ctx, b) : this.ctx.lineTo.apply(this.ctx, b);
                 p.push(this.ctx.stroke())
             }
             return p
         };
-        a.prototype.draw = function(c) {
+        a.prototype.draw = function (c) {
             null == c && (c = 0);
             this.clear();
             this._drawAreas(c);
@@ -1574,9 +1578,9 @@
         return a
     }(Epoch.Time.Stack)
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -1586,22 +1590,22 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Time.Bar = function(c) {
+    Epoch.Time.Bar = function (c) {
         function a() {
             return a.__super__.constructor.apply(this, arguments)
         }
         g(a, c);
-        a.prototype._offsetX = function() {
+        a.prototype._offsetX = function () {
             return 0.5 * this.w() / this.pixelRatio
         };
-        a.prototype.setStyles = function(a) {
+        a.prototype.setStyles = function (a) {
             a = this.getStyles("rect.bar." + a.replace(/\s/g, "."));
             this.ctx.fillStyle = a.fill;
             this.ctx.strokeStyle =
                 null == a.stroke || "none" === a.stroke ? "transparent" : a.stroke;
             if (null != a["stroke-width"]) return this.ctx.lineWidth = a["stroke-width"].replace("px", "")
         };
-        a.prototype.draw = function(c) {
+        a.prototype.draw = function (c) {
             var b, h, k, f, e, g, m, l, n, p, r, s, t;
             null == c && (c = 0);
             this.clear();
@@ -1620,9 +1624,9 @@
         return a
     }(Epoch.Time.Stack)
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -1632,7 +1636,7 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Time.Gauge = function(c) {
+    Epoch.Time.Gauge = function (c) {
         function a(c) {
             this.options = null != c ? c : {};
             a.__super__.constructor.call(this, this.options = Epoch.Util.defaults(this.options, d));
@@ -1650,8 +1654,8 @@
                 delta: 0,
                 target: 0
             };
-            this._animate = function(a) {
-                return function() {
+            this._animate = function (a) {
+                return function () {
                     Math.abs(a.animation.target - a.value) < Math.abs(a.animation.delta) ?
                         (a.value = a.animation.target, clearInterval(a.animation.interval), a.animation.active = !1) : a.value += a.animation.delta;
                     a.svg.select("text.value").text(a.options.format(a.value));
@@ -1678,43 +1682,43 @@
             "option:format": "formatChanged"
         };
         a.prototype.update =
-            function(a) {
+            function (a) {
                 this.animation.target = a;
                 this.animation.delta = (a - this.value) / this.options.fps;
                 if (!this.animation.active) return this.animation.interval = setInterval(this._animate, speedFactor / this.options.fps), this.animation.active = !0
             };
-        a.prototype.push = function(a) {
+        a.prototype.push = function (a) {
             return this.update(a)
         };
-        a.prototype.radius = function() {
+        a.prototype.radius = function () {
             return this.getHeight() / 1.58
         };
-        a.prototype.centerX = function() {
+        a.prototype.centerX = function () {
             return this.getWidth() / 2
         };
-        a.prototype.centerY = function() {
+        a.prototype.centerY = function () {
             return 0.68 * this.getHeight()
         };
-        a.prototype.textX = function() {
+        a.prototype.textX = function () {
             return this.width / 2
         };
         a.prototype.textY =
-            function() {
+            function () {
                 return 0.48 * this.height
             };
-        a.prototype.getAngle = function(a) {
+        a.prototype.getAngle = function (a) {
             var b, c;
             c = this.options.domain;
             b = c[0];
             return (a - b) / (c[1] - b) * (Math.PI + 2 * Math.PI / 8) - Math.PI / 2 - Math.PI / 8
         };
-        a.prototype.setStyles = function(a) {
+        a.prototype.setStyles = function (a) {
             a = this.getStyles(a);
             this.ctx.fillStyle = a.fill;
             this.ctx.strokeStyle = a.stroke;
             if (null != a["stroke-width"]) return this.ctx.lineWidth = a["stroke-width"].replace("px", "")
         };
-        a.prototype.draw = function() {
+        a.prototype.draw = function () {
             var b, c, d, e, g, m, l, n, p, r, s, t;
             g = [this.centerX(), this.centerY(), this.radius()];
             d = g[0];
@@ -1744,7 +1748,7 @@
             this.drawNeedle();
             return a.__super__.draw.call(this)
         };
-        a.prototype.drawNeedle = function() {
+        a.prototype.drawNeedle = function () {
             var a, b, c;
             c = [this.centerX(), this.centerY(), this.radius()];
             a = c[0];
@@ -1767,27 +1771,27 @@
             this.ctx.fill();
             return this.ctx.restore()
         };
-        a.prototype.domainChanged = function() {
+        a.prototype.domainChanged = function () {
             return this.draw()
         };
-        a.prototype.ticksChanged = function() {
+        a.prototype.ticksChanged = function () {
             return this.draw()
         };
-        a.prototype.tickSizeChanged = function() {
+        a.prototype.tickSizeChanged = function () {
             return this.draw()
         };
-        a.prototype.tickOffsetChanged = function() {
+        a.prototype.tickOffsetChanged = function () {
             return this.draw()
         };
-        a.prototype.formatChanged = function() {
+        a.prototype.formatChanged = function () {
             return this.svg.select("text.value").text(this.options.format(this.value))
         };
         return a
     }(Epoch.Chart.Canvas)
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -1797,7 +1801,7 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Time.Heatmap = function(c) {
+    Epoch.Time.Heatmap = function (c) {
         function a(c) {
             this.options = c;
             a.__super__.constructor.call(this, this.options = Epoch.Util.defaults(this.options, b));
@@ -1816,22 +1820,22 @@
             cutOutliers: !1
         };
         d = {
-            root: function(a, b) {
+            root: function (a, b) {
                 return Math.pow(a / b, 0.5)
             },
-            linear: function(a, b) {
+            linear: function (a, b) {
                 return a / b
             },
-            quadratic: function(a, b) {
+            quadratic: function (a, b) {
                 return Math.pow(a / b, 2)
             },
-            cubic: function(a, b) {
+            cubic: function (a, b) {
                 return Math.pow(a / b, 3)
             },
-            quartic: function(a, b) {
+            quartic: function (a, b) {
                 return Math.pow(a / b, 4)
             },
-            quintic: function(a, b) {
+            quintic: function (a, b) {
                 return Math.pow(a / b, 5)
             }
         };
@@ -1843,26 +1847,26 @@
             "option:paintZeroValues": "paintZeroValuesChanged",
             "option:cutOutliers": "cutOutliersChanged"
         };
-        a.prototype._setOpacityFunction = function() {
+        a.prototype._setOpacityFunction = function () {
             if (Epoch.isString(this.options.opacity)) {
                 if (this._opacityFn = d[this.options.opacity], null == this._opacityFn) return Epoch.exception("Unknown coloring function provided '" + this.options.opacity + "'")
             } else return Epoch.isFunction(this.options.opacity) ? this._opacityFn = this.options.opacity : Epoch.exception("Unknown type for provided coloring function.")
         };
-        a.prototype.setData = function(b) {
+        a.prototype.setData = function (b) {
             var c, d, e, g;
             a.__super__.setData.call(this, b);
             e = this.data;
             g = [];
             c = 0;
             for (d = e.length; c <
-                d; c++) b = e[c], g.push(b.values = b.values.map(function(a) {
-                return function(b) {
-                    return a._prepareEntry(b)
-                }
-            }(this)));
+                d; c++) b = e[c], g.push(b.values = b.values.map(function (a) {
+                    return function (b) {
+                        return a._prepareEntry(b)
+                    }
+                }(this)));
             return g
         };
-        a.prototype._getBuckets = function(a) {
+        a.prototype._getBuckets = function (a) {
             var b, c, d, e, g;
             e = a.time;
             g = [];
@@ -1881,19 +1885,19 @@
             for (b = e.buckets.length; 0 <= b ? a < b : a > b; c = 0 <= b ? ++a : --a) e.max = Math.max(e.max, e.buckets[c]);
             return e
         };
-        a.prototype.y = function() {
+        a.prototype.y = function () {
             return d3.scale.linear().domain(this.options.bucketRange).range([this.innerHeight(), 0])
         };
-        a.prototype.ySvg = function() {
+        a.prototype.ySvg = function () {
             return d3.scale.linear().domain(this.options.bucketRange).range([this.innerHeight() / this.pixelRatio, 0])
         };
-        a.prototype.h = function() {
+        a.prototype.h = function () {
             return this.innerHeight() / this.options.buckets
         };
-        a.prototype._offsetX = function() {
+        a.prototype._offsetX = function () {
             return 0.5 * this.w() / this.pixelRatio
         };
-        a.prototype._setupPaintCanvas = function() {
+        a.prototype._setupPaintCanvas = function () {
             this.paintWidth = (this.options.windowSize + 1) * this.w();
             this.paintHeight = this.height * this.pixelRatio;
             this.paint = document.createElement("CANVAS");
@@ -1903,24 +1907,24 @@
             this.redraw();
             this.on("after:shift", "_paintEntry");
             this.on("transition:end", "_shiftPaintCanvas");
-            return this.on("transition:end", function(a) {
-                return function() {
+            return this.on("transition:end", function (a) {
+                return function () {
                     return a.draw(a.animation.frame *
                         a.animation.delta())
                 }
             }(this))
         };
-        a.prototype.redraw = function() {
+        a.prototype.redraw = function () {
             var a, b;
             b = this.data[0].values.length;
             a = this.options.windowSize;
             for (this.inTransition() && a++; 0 <= --b && 0 <= --a;) this._paintEntry(b, a);
             return this.draw(this.animation.frame * this.animation.delta())
         };
-        a.prototype._computeColor = function(a, b, c) {
+        a.prototype._computeColor = function (a, b, c) {
             return Epoch.Util.toRGBA(c, this._opacityFn(a, b))
         };
-        a.prototype._paintEntry = function(a, b) {
+        a.prototype._paintEntry = function (a, b) {
             var c, d, e, g, h, p, r, s, t, v, y, w, A, z;
             null == a && (a = null);
             null == b && (b = null);
@@ -1963,12 +1967,12 @@
             }
             return z
         };
-        a.prototype._shiftPaintCanvas = function() {
+        a.prototype._shiftPaintCanvas = function () {
             var a;
             a = this.p.getImageData(this.w(), 0, this.paintWidth - this.w(), this.paintHeight);
             return this.p.putImageData(a, 0, 0)
         };
-        a.prototype._avgLab = function(a, b) {
+        a.prototype._avgLab = function (a, b) {
             var c, d, e, g, h, p, r, s;
             r = [0, 0, 0, 0];
             h = r[0];
@@ -1981,38 +1985,38 @@
             for (g in a) e = a[g], p = null != e.buckets[b] ? e.buckets[b] | 0 : 0, p /= r, e = d3.lab(e.color), h += p * e.l, c += p * e.a, d += p * e.b;
             return d3.lab(h, c, d).toString()
         };
-        a.prototype.draw = function(b) {
+        a.prototype.draw = function (b) {
             null == b && (b = 0);
             this.clear();
             this.ctx.drawImage(this.paint, b, 0);
             return a.__super__.draw.call(this)
         };
-        a.prototype.bucketsChanged = function() {
+        a.prototype.bucketsChanged = function () {
             return this.redraw()
         };
-        a.prototype.bucketRangeChanged = function() {
+        a.prototype.bucketRangeChanged = function () {
             this._transitionRangeAxes();
             return this.redraw()
         };
-        a.prototype.opacityChanged = function() {
+        a.prototype.opacityChanged = function () {
             this._setOpacityFunction();
             return this.redraw()
         };
-        a.prototype.bucketPaddingChanged = function() {
+        a.prototype.bucketPaddingChanged = function () {
             return this.redraw()
         };
-        a.prototype.paintZeroValuesChanged = function() {
+        a.prototype.paintZeroValuesChanged = function () {
             return this.redraw()
         };
-        a.prototype.cutOutliersChanged = function() {
+        a.prototype.cutOutliersChanged = function () {
             return this.redraw()
         };
         return a
     }(Epoch.Time.Plot)
 }).call(this);
-(function() {
+(function () {
     var e = {}.hasOwnProperty,
-        g = function(c, a) {
+        g = function (c, a) {
             function d() {
                 this.constructor = c
             }
@@ -2022,24 +2026,24 @@
             c.__super__ = a.prototype;
             return c
         };
-    Epoch.Time.Line = function(c) {
+    Epoch.Time.Line = function (c) {
         function a() {
             return a.__super__.constructor.apply(this, arguments)
         }
         g(a, c);
-        a.prototype.setStyles = function(a) {
+        a.prototype.setStyles = function (a) {
             a = this.getStyles("g." + a.replace(/\s/g, ".") + " path.line");
             this.ctx.fillStyle = a.fill;
             this.ctx.strokeStyle = a.stroke;
             return this.ctx.lineWidth = this.pixelRatio * a["stroke-width"].replace("px",
                 "")
         };
-        a.prototype.y = function() {
-            return d3.scale.linear().domain(this.extent(function(a) {
+        a.prototype.y = function () {
+            return d3.scale.linear().domain(this.extent(function (a) {
                 return a.y
             })).range([this.innerHeight() - this.pixelRatio / 2, this.pixelRatio])
         };
-        a.prototype.draw = function(c) {
+        a.prototype.draw = function (c) {
             var b, e, g, f, q, u, m, l, n, p;
             null == c && (c = 0);
             this.clear();
@@ -2055,7 +2059,7 @@
                     q = [this.options.windowSize, f.values.length, this.inTransition()];
                     e = q[0];
                     g = q[1];
-                    for (q = q[2]; - 2 <= --e && 0 <= --g;) b =
+                    for (q = q[2]; -2 <= --e && 0 <= --g;) b =
                         f.values[g], b = [(e + 1) * u + c, m(b.y)], q && (b[0] += u), e === this.options.windowSize - 1 ? this.ctx.moveTo.apply(this.ctx, b) : this.ctx.lineTo.apply(this.ctx, b);
                     this.ctx.stroke()
                 }
@@ -2064,7 +2068,7 @@
         return a
     }(Epoch.Time.Plot)
 }).call(this);
-(function() {
+(function () {
     Epoch._typeMap = {
         area: Epoch.Chart.Area,
         bar: Epoch.Chart.Bar,
@@ -2078,9 +2082,9 @@
         "time.heatmap": Epoch.Time.Heatmap
     }
 }).call(this);
-(function() {
-    null != window.MooTools && function() {
-        return Element.implement("epoch", function(e) {
+(function () {
+    null != window.MooTools && function () {
+        return Element.implement("epoch", function (e) {
             var g, c;
             c = $$(this);
             null == (g = c.retrieve("epoch-chart")[0]) && (e.el = this, g = Epoch._typeMap[e.type], null == g && Epoch.exception("Unknown chart type '" + e.type + "'"), c.store("epoch-chart", g = new g(e)), g.draw());
@@ -2088,10 +2092,10 @@
         })
     }()
 }).call(this);
-(function() {
+(function () {
     var e;
-    e = function(e) {
-        return e.fn.epoch = function(c) {
+    e = function (e) {
+        return e.fn.epoch = function (c) {
             var a;
             c.el = this.get(0);
             null == (a = this.data("epoch-chart")) && (a = Epoch._typeMap[c.type], null == a && Epoch.exception("Unknown chart type '" + c.type + "'"), this.data("epoch-chart", a = new a(c)), a.draw());
@@ -2100,17 +2104,17 @@
     };
     null != window.jQuery && e(jQuery)
 }).call(this);
-(function() {
+(function () {
     var e;
-    e = function(e) {
+    e = function (e) {
         var c, a, d;
         a = {};
         c = 0;
-        d = function() {
+        d = function () {
             return "epoch-chart-" + ++c
         };
         return e.extend(e.fn, {
-            epoch: function(b) {
+            epoch: function (b) {
                 var c, e;
                 if (null != (c = this.data("epoch-chart"))) return a[c];
                 b.el = this.get(0);

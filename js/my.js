@@ -136,7 +136,7 @@ function process(startIndex, isPause) {
             type: 'time.line',
             data: history,
             axes: ['left', 'right'],
-            ticks: { right: 3, left: 3},
+            ticks: { right: 2, left: 2},
             range: [-1.0, 1.0],
             tickFormats: {
                 left: Epoch.Formats.regular,
@@ -163,7 +163,7 @@ function process(startIndex, isPause) {
             type: 'time.line',
             data: history,
             axes: ['left', 'right'],
-            ticks: { right: 3, left: 3},
+            ticks: { right: 2, left: 2},
             range: [-1.0, 1.0],
             tickFormats: {
                 left: Epoch.Formats.regular,
