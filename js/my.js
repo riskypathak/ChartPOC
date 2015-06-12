@@ -73,8 +73,8 @@ $(document).ready(function () {
         var totalDuration = $('#containerVideo').find('video').get(0).duration;
 
         if (!isNaN(totalDuration)) {
-            $('#spnCurrentTime').html(currentTime);
-            $('#spnTotalTime').html(totalDuration);
+            $('#spnCurrentTime').html(secondsToMinutes(currentTime));
+            $('#spnTotalTime').html(secondsToMinutes(totalDuration));
 
             var currentValue = parseInt(currentTime * 100 / totalDuration)
             $('.progress-bar').css('width', currentValue + '%').attr('aria-valuenow', currentValue);
@@ -83,6 +83,21 @@ $(document).ready(function () {
 
     }, 500);
 });
+
+function secondsToMinutes(time) {
+    // Minutes and seconds
+    var mins = ~~(time / 60);
+    var secs = time % 60;
+
+    var mins = ~~((time % 3600) / 60);
+    var secs = time % 60;
+
+    // Output like "1:01" or "4:03:59" or "123:03:59"
+    ret = (mins < 10 ? "0" : "");
+    ret += mins.toFixed(0) + ":" + (secs < 10 ? "0" : "");
+    ret += "" + secs.toFixed(0);
+    return ret;
+}
 
 var csvEngagementData;
 var csvStressData;
@@ -136,7 +151,7 @@ function process(startIndex, isPause) {
             type: 'time.line',
             data: history,
             axes: ['left', 'right'],
-            ticks: { right: 2, left: 2},
+            ticks: { right: 2, left: 2 },
             range: [-1.0, 1.0],
             domain: [-1.0, 1.0],
             tickFormats: {
@@ -164,7 +179,7 @@ function process(startIndex, isPause) {
             type: 'time.line',
             data: history,
             axes: ['left', 'right'],
-            ticks: { right: 2, left: 2},
+            ticks: { right: 2, left: 2 },
             range: [-1.0, 1.0],
             domain: [-1.0, 1.0],
             tickFormats: {
