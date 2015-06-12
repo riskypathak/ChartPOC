@@ -160,7 +160,7 @@
 (function() {
     var e;
     Epoch.Formats.regular = function(g) {
-        return g
+        return g.toFixed(2);
     };
     Epoch.Formats.si = function(g) {
         return Epoch.Util.formatSI(g)

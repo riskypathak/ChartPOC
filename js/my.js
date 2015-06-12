@@ -137,7 +137,11 @@ function process(startIndex, isPause) {
             data: history,
             axes: ['left', 'right'],
             ticks: { right: 3, left: 3},
-            range: [-1.0, 0.0, 1.0],
+            range: [-1.0, 1.0],
+            tickFormats: {
+                left: Epoch.Formats.regular,
+                right: Epoch.Formats.regular
+            },
         });
     }
     else {
@@ -160,7 +164,11 @@ function process(startIndex, isPause) {
             data: history,
             axes: ['left', 'right'],
             ticks: { right: 3, left: 3},
-            range: [-1.0, 0.0, 1.0]
+            range: [-1.0, 1.0],
+            tickFormats: {
+                left: Epoch.Formats.regular,
+                right: Epoch.Formats.regular
+            }
         });
     }
     else {
