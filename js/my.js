@@ -138,6 +138,7 @@ function process(startIndex, isPause) {
             axes: ['left', 'right'],
             ticks: { right: 2, left: 2},
             range: [-1.0, 1.0],
+            domain: [-1.0, 1.0],
             tickFormats: {
                 left: Epoch.Formats.regular,
                 right: Epoch.Formats.regular
@@ -165,6 +166,7 @@ function process(startIndex, isPause) {
             axes: ['left', 'right'],
             ticks: { right: 2, left: 2},
             range: [-1.0, 1.0],
+            domain: [-1.0, 1.0],
             tickFormats: {
                 left: Epoch.Formats.regular,
                 right: Epoch.Formats.regular
