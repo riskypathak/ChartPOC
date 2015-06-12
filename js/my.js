@@ -135,9 +135,8 @@ function process(startIndex, isPause) {
         chartEngagement = $('#epochChartEngagement').epoch({
             type: 'time.line',
             data: history,
-            axes: ['left', 'bottom', 'right'],
-            ticks: { right: 5, left: 5, bottom: 20 },
-            tickFormats: { bottom: function (d) { return d - csvEngagementData.data[0].time; } },
+            axes: ['left', 'right'],
+            ticks: { right: 3, left: 3},
             range: [-1.0, 0.0, 1.0],
         });
     }
@@ -159,9 +158,8 @@ function process(startIndex, isPause) {
         chartStress = $('#epochChartStress').epoch({
             type: 'time.line',
             data: history,
-            axes: ['left', 'bottom', 'right'],
-            ticks: { right: 5, left: 5, bottom: 20 },
-            tickFormats: { bottom: function (d) { return d - csvEngagementData.data[0].time; } },
+            axes: ['left', 'right'],
+            ticks: { right: 3, left: 3},
             range: [-1.0, 0.0, 1.0]
         });
     }
