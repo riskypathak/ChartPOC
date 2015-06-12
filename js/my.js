@@ -137,7 +137,8 @@ function process(startIndex, isPause) {
             data: history,
             axes: ['left', 'bottom', 'right'],
             ticks: { right: 5, left: 5, bottom: 20 },
-            tickFormats: { bottom: function (d) { return d - csvEngagementData.data[0].time; } }
+            tickFormats: { bottom: function (d) { return d - csvEngagementData.data[0].time; } },
+            range: [-1.0, 1.0],
         });
     }
     else {
@@ -160,7 +161,8 @@ function process(startIndex, isPause) {
             data: history,
             axes: ['left', 'bottom', 'right'],
             ticks: { right: 5, left: 5, bottom: 20 },
-            tickFormats: { bottom: function (d) { return d - csvEngagementData.data[0].time; } }
+            tickFormats: { bottom: function (d) { return d - csvEngagementData.data[0].time; } },
+            range: [-1, 1]
         });
     }
     else {
