@@ -1,4 +1,6 @@
 ﻿var speedFactor = 100;
+var chartEngagement;
+var chartStress;
 
 $(document).ready(function () {
 
@@ -32,41 +34,6 @@ $(document).ready(function () {
         }
     });
 
-    //init
-
-    $("#vdoMain").on(
-      "play",
-      function (event) {
-
-          var timeStamp = csvEngagementData.data[0].time + parseInt(this.currentTime);
-          var indexes = $.map(csvEngagementData.data, function (obj, index) {
-              if (obj.time == timeStamp) {
-                  return index;
-              }
-          })
-
-          process(indexes[0], false);
-          chartEngagement.animation.active = true;
-          chartStress.animation.active = true;
-      });
-
-    $("#vdoMain").on(
-      "pause",
-      function (event) {
-          window.clearInterval(intervalTrigger);
-          var timeStamp = csvEngagementData.data[0].time + parseInt(this.currentTime);
-
-          var indexes = $.map(csvEngagementData.data, function (obj, index) {
-              if (obj.time == timeStamp) {
-                  return index;
-              }
-          })
-
-          process(indexes[0], true);
-          chartEngagement.animation.active = false;
-          chartStress.animation.active = false;
-      });
-
     setInterval(function () {
 
         var currentTime = $('#containerVideo').find('video').get(0).currentTime;
@@ -79,6 +46,8 @@ $(document).ready(function () {
             var currentValue = parseInt(currentTime * 100 / totalDuration)
             $('.progress-bar').css('width', currentValue + '%').attr('aria-valuenow', currentValue);
 
+            chartEngagement.zoomToIndexes(Math.floor(currentTime) * 10, Math.floor(currentTime + 5) * 10);
+            chartStress.zoomToIndexes(Math.floor(currentTime) * 10, Math.floor(currentTime + 5) * 10);
         }
 
     }, 500);
@@ -99,16 +68,6 @@ function secondsToMinutes(time) {
     return ret;
 }
 
-var csvEngagementData;
-var csvStressData;
-var chartEngagement;
-var chartStress;
-
-var currentEngagementIndex = 0;
-var currentStressIndex = 0;
-
-var intervalTrigger;
-
 function handleFileSelect(evt) {
     var engagementFile = evt.target.files[0];
     var stressFile = evt.target.files[1];
@@ -117,9 +76,17 @@ function handleFileSelect(evt) {
         header: true,
         dynamicTyping: true,
         complete: function (results) {
-            csvEngagementData = results;
-            process(0, true);
-            chartEngagement.animation.active = true;
+            var csvEngagementData = [];
+
+            var initialTimeStamp = results.data[0].time;
+            results.data.forEach(function (result) {
+                var entry = {};
+                entry["Time"] = msToTime(result.time - initialTimeStamp);
+                entry["Stress"] = result.y;
+
+                csvEngagementData.push(entry);
+            });
+            processEngagement('epochChartEngagement', csvEngagementData);
         }
     });
 
@@ -127,8 +94,17 @@ function handleFileSelect(evt) {
         header: true,
         dynamicTyping: true,
         complete: function (results) {
-            csvStressData = results;
-            process(0, true);
+            var csvStressData = [];
+
+            var initialTimeStamp = results.data[0].time;
+            results.data.forEach(function (result) {
+                var entry = {};
+                entry["Time"] = msToTime(result.time - initialTimeStamp);
+                entry["Stress"] = result.y;
+
+                csvStressData.push(entry);
+            });
+            processStress('epochChartStress', csvStressData);
         }
     });
 
@@ -136,93 +112,354 @@ function handleFileSelect(evt) {
     $("#vdoMain").load();
 }
 
-function process(startIndex, isPause) {
-    var history = [];
+function msToTime(duration) {
+    //just input is seconds so convert it into miliseconds
+    duration = Math.ceil(duration * 1000);
 
-    history.push({ values: [] });
+    var milliseconds = parseInt((duration % 1000) / 100)
+        , seconds = parseInt((duration / 1000) % 60)
+        , minutes = parseInt((duration / (1000 * 60)) % 60)
+        , hours = parseInt((duration / (1000 * 60 * 60)) % 24);
 
-    for (i = startIndex; i < startIndex + 60; i++) {
-        history[0].values.push(csvEngagementData.data[i]);
-    }
-    currentEngagementIndex = i;
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
 
-    if (chartEngagement == undefined) {
-        chartEngagement = $('#epochChartEngagement').epoch({
-            type: 'time.line',
-            data: history,
-            axes: ['left', 'right'],
-            ticks: { right: 2, left: 2 },
-            range: [-1.0, 1.0],
-            domain: [-1.0, 1.0],
-            tickFormats: {
-                left: Epoch.Formats.regular,
-                right: Epoch.Formats.regular
-            },
-        });
-    }
-    else {
-        chartEngagement.options.data = history;
-    }
-
-    //stress chart
-    history = [];
-
-    history.push({ values: [] });
-
-    for (i = startIndex; i < startIndex + 60; i++) {
-        history[0].values.push(csvStressData.data[i]);
-    }
-    currentStressIndex = i;
-
-    if (chartStress == undefined) {
-        chartStress = $('#epochChartStress').epoch({
-            type: 'time.line',
-            data: history,
-            axes: ['left', 'right'],
-            ticks: { right: 2, left: 2 },
-            range: [-1.0, 1.0],
-            domain: [-1.0, 1.0],
-            tickFormats: {
-                left: Epoch.Formats.regular,
-                right: Epoch.Formats.regular
-            }
-        });
-    }
-    else {
-        chartStress.options.data = history;
-    }
-
-    if (!isPause) {
-        intervalTrigger = setInterval(function () {
-            chartEngagement.push(nextEngagement());
-            currentEngagementIndex++;
-
-            chartStress.push(nextStress());
-            currentStressIndex++;
-        }, 100);
-
-        chartEngagement.push(nextEngagement());
-        currentEngagementIndex++;
-
-        chartStress.push(nextStress());
-        currentStressIndex++;
-    }
+    return hours + ":" + minutes + ":" + seconds + "." + Math.floor(milliseconds);
 }
 
-function nextEngagement() {
-    if (currentEngagementIndex < csvEngagementData.data.length) {
-        var entry = [];
-        entry.push(csvEngagementData.data[currentEngagementIndex]);
-        return entry;
-    }
-    return;
+function processEngagement(chartDiv, data) {
+    chartEngagement = AmCharts.makeChart(chartDiv,
+                    {
+                        "type": "serial",
+                        "path": "http://www.amcharts.com/lib/3/",
+                        "categoryField": "Time",
+                        "dataDateFormat": "JJ:NN:SS.QQQ",
+                        "maxSelectedTime": 10000,
+                        "minSelectedTime": 10000,
+                        "zoomOutButtonImageSize": 15,
+                        "categoryAxis": {
+                            "autoRotateCount": 0,
+                            "dateFormats": [
+                                {
+                                    "period": "fff",
+                                    "format": "JJ:NN:SS.QQQ"
+                                },
+                                {
+                                    "period": "ss",
+                                    "format": "JJ:NN:SS"
+                                },
+                                {
+                                    "period": "mm",
+                                    "format": "JJ:NN"
+                                },
+                                {
+                                    "period": "hh",
+                                    "format": "JJ:NN"
+                                },
+                                {
+                                    "period": "DD",
+                                    "format": "MMM DD"
+                                },
+                                {
+                                    "period": "WW",
+                                    "format": "MMM DD"
+                                },
+                                {
+                                    "period": "MM",
+                                    "format": "MMM"
+                                },
+                                {
+                                    "period": "YYYY",
+                                    "format": "YYYY"
+                                }
+                            ],
+                            "minPeriod": "ss",
+                            "parseDates": true,
+                            "position": "top",
+                            "gridCount": 2,
+                            "labelsEnabled": false,
+                            "minVerticalGap": 36,
+                            "titleFontSize": 0
+                        },
+                        "chartCursor": {
+                            "bulletsEnabled": true,
+                            "bulletSize": 3,
+                            "categoryBalloonDateFormat": "JJ:NN:SS",
+                            "pan": true,
+                            "selectWithoutZooming": true,
+                            "valueLineAxis": "stress_axis",
+                            "valueLineBalloonEnabled": true
+                        },
+                        "chartScrollbar": {
+                            "autoGridCount": true,
+                            "backgroundColor": "#F9F9F9",
+                            "color": "#888888",
+                            "graph": "stress",
+                            "graphFillColor": "#B2D7F9",
+                            "graphLineColor": "#3CA2FF",
+                            "graphType": "line",
+                            "gridColor": "#CFCFCF",
+                            "gridCount": 1,
+                            "hideResizeGrips": true,
+                            "maximum": 1.2,
+                            "minimum": -1.2,
+                            "offset": 100,
+                            "scrollbarHeight": 50,
+                            "selectedGraphFillColor": "#319CFF",
+                            "selectedGraphLineColor": "#319CFF",
+                            "enabled": false
+                        },
+                        "trendLines": [],
+                        "graphs": [
+                            {
+                                "alphaField": "Stress",
+                                "animationPlayed": true,
+                                "bulletBorderThickness": 0,
+                                "dateFormat": "JJ:NN:SS",
+                                "fillToAxis": "stress_axis",
+                                "fillToGraph": "stress",
+                                "gapPeriod": 0,
+                                "id": "stress",
+                                "minDistance": 23,
+                                "precision": 2,
+                                "title": "Stress",
+                                "valueAxis": "stress_axis",
+                                "valueField": "Stress",
+                                "visibleInLegend": false,
+                                "xAxis": "Not set",
+                                "xField": "Time",
+                                "yAxis": "Not set",
+                                "yField": "Stress"
+                            }
+                        ],
+                        "guides": [],
+                        "valueAxes": [
+                            {
+                                "id": "stress_axis",
+                                "maximum": 1.2,
+                                "minimum": -1.2,
+                                "precision": 1,
+                                "strictMinMax": true,
+                                "synchronizeWith": "Not set",
+                                "dateFormats": [
+                                    {
+                                        "period": "fff",
+                                        "format": "JJ:NN:SS.QQQ"
+                                    },
+                                    {
+                                        "period": "ss",
+                                        "format": "JJ:NN:SS"
+                                    },
+                                    {
+                                        "period": "mm",
+                                        "format": "JJ:NN"
+                                    },
+                                    {
+                                        "period": "hh",
+                                        "format": "JJ:NN"
+                                    },
+                                    {
+                                        "period": "DD",
+                                        "format": "MMM DD"
+                                    },
+                                    {
+                                        "period": "WW",
+                                        "format": "MMM DD"
+                                    },
+                                    {
+                                        "period": "MM",
+                                        "format": "MMM"
+                                    },
+                                    {
+                                        "period": "YYYY",
+                                        "format": "YYYY"
+                                    }
+                                ]
+                            }
+                        ],
+                        "allLabels": [],
+                        "balloon": {},
+                        "export": {
+                            "enabled": true
+                        },
+                        "titles": [
+                            {
+                                "id": "Title-1",
+                                "size": 15,
+                                "text": ""
+                            }
+                        ],
+                        "dataProvider": data
+                    });
+
+    chartEngagement.zoomToIndexes(0, 50);
 }
 
-function nextStress() {
-    if (currentStressIndex < csvStressData.data.length) {
-        var entry = [];
-        entry.push(csvStressData.data[currentStressIndex]);
-        return entry;
-    }
-    return;
+function processStress(chartDiv, data) {
+    chartStress = AmCharts.makeChart(chartDiv,
+                    {
+                        "type": "serial",
+                        "path": "http://www.amcharts.com/lib/3/",
+                        "categoryField": "Time",
+                        "dataDateFormat": "JJ:NN:SS.QQQ",
+                        "maxSelectedTime": 10000,
+                        "minSelectedTime": 10000,
+                        "zoomOutButtonImageSize": 15,
+                        "categoryAxis": {
+                            "autoRotateCount": 0,
+                            "dateFormats": [
+                                {
+                                    "period": "fff",
+                                    "format": "JJ:NN:SS.QQQ"
+                                },
+                                {
+                                    "period": "ss",
+                                    "format": "JJ:NN:SS"
+                                },
+                                {
+                                    "period": "mm",
+                                    "format": "JJ:NN"
+                                },
+                                {
+                                    "period": "hh",
+                                    "format": "JJ:NN"
+                                },
+                                {
+                                    "period": "DD",
+                                    "format": "MMM DD"
+                                },
+                                {
+                                    "period": "WW",
+                                    "format": "MMM DD"
+                                },
+                                {
+                                    "period": "MM",
+                                    "format": "MMM"
+                                },
+                                {
+                                    "period": "YYYY",
+                                    "format": "YYYY"
+                                }
+                            ],
+                            "minPeriod": "ss",
+                            "parseDates": true,
+                            "position": "top",
+                            "gridCount": 2,
+                            "labelsEnabled": false,
+                            "minVerticalGap": 36,
+                            "titleFontSize": 0
+                        },
+                        "chartCursor": {
+                            "bulletsEnabled": true,
+                            "bulletSize": 3,
+                            "categoryBalloonDateFormat": "JJ:NN:SS",
+                            "pan": true,
+                            "selectWithoutZooming": true,
+                            "valueLineAxis": "stress_axis",
+                            "valueLineBalloonEnabled": true
+                        },
+                        "chartScrollbar": {
+                            "autoGridCount": true,
+                            "backgroundColor": "#F9F9F9",
+                            "color": "#888888",
+                            "graph": "stress",
+                            "graphFillColor": "#B2D7F9",
+                            "graphLineColor": "#3CA2FF",
+                            "graphType": "line",
+                            "gridColor": "#CFCFCF",
+                            "gridCount": 1,
+                            "hideResizeGrips": true,
+                            "maximum": 1.2,
+                            "minimum": -1.2,
+                            "offset": 100,
+                            "scrollbarHeight": 50,
+                            "selectedGraphFillColor": "#319CFF",
+                            "selectedGraphLineColor": "#319CFF",
+                            "enabled": false
+                        },
+                        "trendLines": [],
+                        "graphs": [
+                            {
+                                "alphaField": "Stress",
+                                "animationPlayed": true,
+                                "bulletBorderThickness": 0,
+                                "dateFormat": "JJ:NN:SS",
+                                "fillToAxis": "stress_axis",
+                                "fillToGraph": "stress",
+                                "gapPeriod": 0,
+                                "id": "stress",
+                                "minDistance": 23,
+                                "precision": 2,
+                                "title": "Stress",
+                                "valueAxis": "stress_axis",
+                                "valueField": "Stress",
+                                "visibleInLegend": false,
+                                "xAxis": "Not set",
+                                "xField": "Time",
+                                "yAxis": "Not set",
+                                "yField": "Stress"
+                            }
+                        ],
+                        "guides": [],
+                        "valueAxes": [
+                            {
+                                "id": "stress_axis",
+                                "maximum": 1.2,
+                                "minimum": -1.2,
+                                "precision": 1,
+                                "strictMinMax": true,
+                                "synchronizeWith": "Not set",
+                                "dateFormats": [
+                                    {
+                                        "period": "fff",
+                                        "format": "JJ:NN:SS.QQQ"
+                                    },
+                                    {
+                                        "period": "ss",
+                                        "format": "JJ:NN:SS"
+                                    },
+                                    {
+                                        "period": "mm",
+                                        "format": "JJ:NN"
+                                    },
+                                    {
+                                        "period": "hh",
+                                        "format": "JJ:NN"
+                                    },
+                                    {
+                                        "period": "DD",
+                                        "format": "MMM DD"
+                                    },
+                                    {
+                                        "period": "WW",
+                                        "format": "MMM DD"
+                                    },
+                                    {
+                                        "period": "MM",
+                                        "format": "MMM"
+                                    },
+                                    {
+                                        "period": "YYYY",
+                                        "format": "YYYY"
+                                    }
+                                ]
+                            }
+                        ],
+                        "allLabels": [],
+                        "balloon": {},
+                        "export": {
+                            "enabled": true
+                        },
+                        "titles": [
+                            {
+                                "id": "Title-1",
+                                "size": 15,
+                                "text": ""
+                            }
+                        ],
+                        "dataProvider": data
+                    });
+
+    chartStress.zoomToIndexes(0, 50);
 }
