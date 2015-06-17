@@ -2,8 +2,27 @@
 var chartEngagement;
 var chartStress;
 var mainSlider;
-var ourZoom = false;
-var otherChartZoom = false;
+
+var isSliderMovedManually = false;
+var isEChartMovedManually = false;
+var IsSChartMovedManually = false;
+
+var sliderFrom, EChartStartIndex, SChartStartIndex;
+var isSyncProcess = false;
+
+function handleSChartZoom(event) {
+    if (!isSyncProcess) {
+        isSChartMovedManually = true;
+        SChartStartIndex = event.startIndex;
+    }
+}
+
+function handleEChartZoom(event) {
+    if (!isSyncProcess) {
+        isEChartMovedManually = true;
+        EChartStartIndex = event.startIndex;
+    }
+}
 
 $(document).ready(function () {
 
@@ -16,11 +35,14 @@ $(document).ready(function () {
         prettify: false,
         from: 0,
         onChange: function (data) {
-            var totalDuration = $('#containerVideo').find('video').get(0).duration;
-            $('#containerVideo').find('video').get(0).currentTime = totalDuration * data.from / 100;
+            if (!isSyncProcess) {
+                isSliderMovedManually = true;
+                sliderFrom = data.from;
+            }
         }
     });
 
+    mainSlider = $("#sliderRange").data("ionRangeSlider");
 
     $("#fileData").change(handleFileSelect);
 
@@ -50,29 +72,53 @@ $(document).ready(function () {
         }
     });
 
-
-    
-
     setInterval(function () {
+        isSyncProcess = true;
+        var video = $('#containerVideo').find('video').get(0);
+        var videoTotalDuration = video.duration;
 
-        var currentTime = $('#containerVideo').find('video').get(0).currentTime;
-        var totalDuration = $('#containerVideo').find('video').get(0).duration;
+        if (isSliderMovedManually) {
 
-        if (!isNaN(totalDuration) || !$('#containerVideo').find('video').get(0).paused) {
-            $('#spnCurrentTime').html(secondsToMinutes(currentTime));
-            $('#spnTotalTime').html(secondsToMinutes(totalDuration));
+            video.currentTime = videoTotalDuration * sliderFrom / 100; //video
+            chartStress.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10);//schart
+            chartEngagement.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10);//echart
 
-            var currentValue = parseInt(currentTime * 100 / totalDuration);
-            mainSlider = $("#sliderRange").data("ionRangeSlider");
 
-            mainSlider.update({
-                from: currentValue
-            });
+            isSliderMovedManually = false;
 
-            chartEngagement.zoomToIndexes(Math.floor(currentTime) * 10, Math.floor(currentTime + 5) * 10);
-            chartStress.zoomToIndexes(Math.floor(currentTime) * 10, Math.floor(currentTime + 5) * 10);
-            ourZoom = true;
         }
+        else if (IsSChartMovedManually) {
+
+            video.currentTime = Math.ceil(SChartStartIndex / 10); //video
+            var currentValue = parseInt(video.currentTime * 100 / videoTotalDuration);
+            mainSlider.update({ from: currentValue }); //slider
+            chartEngagement.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10);//echart
+
+            IsSChartMovedManually = false;
+        }
+        else if (isEChartMovedManually) {
+
+            video.currentTime = Math.ceil(EChartStartIndex / 10); //video
+            var currentValue = parseInt(video.currentTime * 100 / videoTotalDuration);
+            mainSlider.update({ from: currentValue }); //slider
+            chartStress.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10);//schart
+
+            isEChartMovedManually = false;
+        }
+        else {
+            if (!isNaN(videoTotalDuration) || !video.paused) {
+                var currentValue = parseInt(video.currentTime * 100 / videoTotalDuration);
+                mainSlider.update({ from: currentValue }); //slider
+
+                chartStress.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10); //schart
+                chartEngagement.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10); //echart
+
+            }
+        }
+
+        $('#spnCurrentTime').html(secondsToMinutes(video.currentTime));
+        $('#spnTotalTime').html(secondsToMinutes(videoTotalDuration));
+        isSyncProcess = false;
 
     }, 500);
 });
@@ -163,41 +209,6 @@ function processEngagement(chartDiv, data) {
                         "minSelectedTime": 10000,
                         "zoomOutButtonImageSize": 15,
                         "categoryAxis": {
-                            "autoRotateCount": 0,
-                            "dateFormats": [
-                                {
-                                    "period": "fff",
-                                    "format": "JJ:NN:SS.QQQ"
-                                },
-                                {
-                                    "period": "ss",
-                                    "format": "JJ:NN:SS"
-                                },
-                                {
-                                    "period": "mm",
-                                    "format": "JJ:NN"
-                                },
-                                {
-                                    "period": "hh",
-                                    "format": "JJ:NN"
-                                },
-                                {
-                                    "period": "DD",
-                                    "format": "MMM DD"
-                                },
-                                {
-                                    "period": "WW",
-                                    "format": "MMM DD"
-                                },
-                                {
-                                    "period": "MM",
-                                    "format": "MMM"
-                                },
-                                {
-                                    "period": "YYYY",
-                                    "format": "YYYY"
-                                }
-                            ],
                             "minPeriod": "ss",
                             "parseDates": true,
                             "position": "top",
@@ -227,7 +238,7 @@ function processEngagement(chartDiv, data) {
                             "gridCount": 1,
                             "hideResizeGrips": true,
                             "maximum": 1.2,
-                            "minimum": -1.2,
+                            "minimum": 0,
                             "offset": 100,
                             "scrollbarHeight": 50,
                             "selectedGraphFillColor": "#319CFF",
@@ -247,44 +258,10 @@ function processEngagement(chartDiv, data) {
                             {
                                 "id": "stress_axis",
                                 "maximum": 1.2,
-                                "minimum": -1.2,
+                                "minimum": 0,
                                 "precision": 1,
                                 "strictMinMax": true,
                                 "synchronizeWith": "Not set",
-                                "dateFormats": [
-                                    {
-                                        "period": "fff",
-                                        "format": "JJ:NN:SS.QQQ"
-                                    },
-                                    {
-                                        "period": "ss",
-                                        "format": "JJ:NN:SS"
-                                    },
-                                    {
-                                        "period": "mm",
-                                        "format": "JJ:NN"
-                                    },
-                                    {
-                                        "period": "hh",
-                                        "format": "JJ:NN"
-                                    },
-                                    {
-                                        "period": "DD",
-                                        "format": "MMM DD"
-                                    },
-                                    {
-                                        "period": "WW",
-                                        "format": "MMM DD"
-                                    },
-                                    {
-                                        "period": "MM",
-                                        "format": "MMM"
-                                    },
-                                    {
-                                        "period": "YYYY",
-                                        "format": "YYYY"
-                                    }
-                                ]
                             }
                         ],
                         "allLabels": [],
@@ -303,22 +280,7 @@ function processEngagement(chartDiv, data) {
                     });
 
     chartEngagement.zoomToIndexes(0, 50);
-    chartEngagement.addListener("zoomed", handleZoom);
-}
-
-function handleZoom(event) {
-    if (ourZoom) {
-        ourZoom = false;
-    }
-    else {
-        if (otherChartZoom) {
-            otherChartZoom = false;
-        }
-        else {
-            $('#containerVideo').find('video').get(0).currentTime = Math.ceil(event.startIndex / 10);
-            otherChartZoom = true;
-        }
-    }
+    chartEngagement.addListener("zoomed", handleEChartZoom);
 }
 
 function processStress(chartDiv, data) {
@@ -332,41 +294,6 @@ function processStress(chartDiv, data) {
                         "minSelectedTime": 10000,
                         "zoomOutButtonImageSize": 15,
                         "categoryAxis": {
-                            "autoRotateCount": 0,
-                            "dateFormats": [
-                                {
-                                    "period": "fff",
-                                    "format": "JJ:NN:SS.QQQ"
-                                },
-                                {
-                                    "period": "ss",
-                                    "format": "JJ:NN:SS"
-                                },
-                                {
-                                    "period": "mm",
-                                    "format": "JJ:NN"
-                                },
-                                {
-                                    "period": "hh",
-                                    "format": "JJ:NN"
-                                },
-                                {
-                                    "period": "DD",
-                                    "format": "MMM DD"
-                                },
-                                {
-                                    "period": "WW",
-                                    "format": "MMM DD"
-                                },
-                                {
-                                    "period": "MM",
-                                    "format": "MMM"
-                                },
-                                {
-                                    "period": "YYYY",
-                                    "format": "YYYY"
-                                }
-                            ],
                             "minPeriod": "ss",
                             "parseDates": true,
                             "position": "top",
@@ -396,7 +323,7 @@ function processStress(chartDiv, data) {
                             "gridCount": 1,
                             "hideResizeGrips": true,
                             "maximum": 1.2,
-                            "minimum": -1.2,
+                            "minimum": 0,
                             "offset": 100,
                             "scrollbarHeight": 50,
                             "selectedGraphFillColor": "#319CFF",
@@ -416,44 +343,10 @@ function processStress(chartDiv, data) {
                             {
                                 "id": "stress_axis",
                                 "maximum": 1.2,
-                                "minimum": -1.2,
+                                "minimum": 0,
                                 "precision": 1,
                                 "strictMinMax": true,
                                 "synchronizeWith": "Not set",
-                                "dateFormats": [
-                                    {
-                                        "period": "fff",
-                                        "format": "JJ:NN:SS.QQQ"
-                                    },
-                                    {
-                                        "period": "ss",
-                                        "format": "JJ:NN:SS"
-                                    },
-                                    {
-                                        "period": "mm",
-                                        "format": "JJ:NN"
-                                    },
-                                    {
-                                        "period": "hh",
-                                        "format": "JJ:NN"
-                                    },
-                                    {
-                                        "period": "DD",
-                                        "format": "MMM DD"
-                                    },
-                                    {
-                                        "period": "WW",
-                                        "format": "MMM DD"
-                                    },
-                                    {
-                                        "period": "MM",
-                                        "format": "MMM"
-                                    },
-                                    {
-                                        "period": "YYYY",
-                                        "format": "YYYY"
-                                    }
-                                ]
                             }
                         ],
                         "allLabels": [],
@@ -472,5 +365,5 @@ function processStress(chartDiv, data) {
                     });
 
     chartStress.zoomToIndexes(0, 50);
-    chartStress.addListener("zoomed", handleZoom);
+    chartStress.addListener("zoomed", handleSChartZoom);
 }
