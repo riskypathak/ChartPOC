@@ -30,7 +30,7 @@ $(document).ready(function () {
         min: 0,
         max: 100,
         type: 'single',
-        step: 1,
+        step: 2,
         postfix: "%",
         prettify: false,
         from: 0,
@@ -110,13 +110,14 @@ $(document).ready(function () {
                 var currentValue = parseInt(video.currentTime * 100 / videoTotalDuration);
                 mainSlider.update({ from: currentValue }); //slider
 
+                $('#spnCurrentTime').html(secondsToMinutes(Math.floor(video.currentTime) * 10));
                 chartStress.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10); //schart
                 chartEngagement.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10); //echart
 
             }
         }
 
-        $('#spnCurrentTime').html(secondsToMinutes(video.currentTime));
+        //$('#spnCurrentTime').html(secondsToMinutes(video.currentTime));
         $('#spnTotalTime').html(secondsToMinutes(videoTotalDuration));
         isSyncProcess = false;
 
@@ -209,6 +210,41 @@ function processEngagement(chartDiv, data) {
                         "minSelectedTime": 10000,
                         "zoomOutButtonImageSize": 15,
                         "categoryAxis": {
+                            "autoRotateCount": 0,
+                            "dateFormats": [
+                                {
+                                    "period": "fff",
+                                    "format": "JJ:NN:SS.QQQ"
+                                },
+                                {
+                                    "period": "ss",
+                                    "format": "JJ:NN:SS"
+                                },
+                                {
+                                    "period": "mm",
+                                    "format": "JJ:NN"
+                                },
+                                {
+                                    "period": "hh",
+                                    "format": "JJ:NN"
+                                },
+                                {
+                                    "period": "DD",
+                                    "format": "MMM DD"
+                                },
+                                {
+                                    "period": "WW",
+                                    "format": "MMM DD"
+                                },
+                                {
+                                    "period": "MM",
+                                    "format": "MMM"
+                                },
+                                {
+                                    "period": "YYYY",
+                                    "format": "YYYY"
+                                }
+                            ],
                             "minPeriod": "ss",
                             "parseDates": true,
                             "position": "top",
@@ -237,7 +273,7 @@ function processEngagement(chartDiv, data) {
                             "gridColor": "#CFCFCF",
                             "gridCount": 1,
                             "hideResizeGrips": true,
-                            "maximum": 1.2,
+                            "maximum": 1.0,
                             "minimum": 0,
                             "offset": 100,
                             "scrollbarHeight": 50,
@@ -248,26 +284,76 @@ function processEngagement(chartDiv, data) {
                         "trendLines": [],
                         "graphs": [
                             {
+                                //"alphaField": "Stress",
+                                //"animationPlayed": true,
+                                //"bulletBorderThickness": 0,
+                                //"dateFormat": "JJ:NN:SS",
+                                //"fillToAxis": "stress_axis",
+                                //"fillToGraph": "stress",
+                                //"gapPeriod": 0,
+                                "minDistance": 23,
+                                "precision": 2,
+                                "title": "Stress",
+                                "valueAxis": "stress_axis",
                                 "fillAlphas": 0.4,
                                 "id": "stress",
-                                "valueField": "Stress"
+                                "valueField": "Stress",
+                                "visibleInLegend": false,
+                                "xAxis": "Not set",
+                                "xField": "Time",
+                                "yAxis": "Not set",
+                                "yField": "Stress"
                             }
                         ],
                         "guides": [],
                         "valueAxes": [
                             {
                                 "id": "stress_axis",
-                                "maximum": 1.2,
+                                "maximum": 1.0,
                                 "minimum": 0,
                                 "precision": 1,
                                 "strictMinMax": true,
                                 "synchronizeWith": "Not set",
+                                "dateFormats": [
+                                    {
+                                        "period": "fff",
+                                        "format": "JJ:NN:SS.QQQ"
+                                    },
+                                    {
+                                        "period": "ss",
+                                        "format": "JJ:NN:SS"
+                                    },
+                                    {
+                                        "period": "mm",
+                                        "format": "JJ:NN"
+                                    },
+                                    {
+                                        "period": "hh",
+                                        "format": "JJ:NN"
+                                    },
+                                    {
+                                        "period": "DD",
+                                        "format": "MMM DD"
+                                    },
+                                    {
+                                        "period": "WW",
+                                        "format": "MMM DD"
+                                    },
+                                    {
+                                        "period": "MM",
+                                        "format": "MMM"
+                                    },
+                                    {
+                                        "period": "YYYY",
+                                        "format": "YYYY"
+                                    }
+                                ]
                             }
                         ],
                         "allLabels": [],
                         "balloon": {},
                         "export": {
-                            "enabled": true
+                            "enabled": false
                         },
                         "titles": [
                             {
@@ -276,7 +362,7 @@ function processEngagement(chartDiv, data) {
                                 "text": ""
                             }
                         ],
-                        "dataProvider": data,
+                        "dataProvider": data
                     });
 
     chartEngagement.zoomToIndexes(0, 50);
@@ -333,9 +419,25 @@ function processStress(chartDiv, data) {
                         "trendLines": [],
                         "graphs": [
                             {
+                                //"alphaField": "Stress",
+                                //"animationPlayed": true,
+                                //"bulletBorderThickness": 0,
+                                //"dateFormat": "JJ:NN:SS",
+                                //"fillToAxis": "stress_axis",
+                                //"fillToGraph": "stress",
+                                //"gapPeriod": 0,
+                                "minDistance": 23,
+                                "precision": 2,
+                                "title": "Stress",
+                                "valueAxis": "stress_axis",
                                 "fillAlphas": 0.4,
                                 "id": "stress",
-                                "valueField": "Stress"
+                                "valueField": "Stress",
+                                "visibleInLegend": false,
+                                "xAxis": "Not set",
+                                "xField": "Time",
+                                "yAxis": "Not set",
+                                "yField": "Stress"
                             }
                         ],
                         "guides": [],
