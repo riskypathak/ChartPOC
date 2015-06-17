@@ -28,6 +28,9 @@
     <link href="assets/admin/layout3/css/custom.css" rel="stylesheet" type="text/css">
     <!-- END THEME STYLES -->
 
+    <link href="assets/global/plugins/ion.rangeslider/css/ion.rangeSlider.css" rel="stylesheet" type="text/css" />
+    <link href="assets/global/plugins/ion.rangeslider/css/ion.rangeSlider.Metronic.css" rel="stylesheet" type="text/css" />
+
     <link rel="stylesheet" href="css/my.css">
 
     <link rel="shortcut icon" href="favicon.ico" />
@@ -158,12 +161,9 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-8">
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="0"
-                                             aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                    
+                                        <input id="sliderRange" class="sliderClass" name="sliderRange" type="text" />
                                     </div>
-
                                 </div>
                                 <div class="col-sm-2">
                                     <button value="play" id="btnPlay"><span class="glyphicon glyphicon-play"></span></button>
@@ -233,11 +233,14 @@
     <script src="assets/global/scripts/metronic.js" type="text/javascript"></script>
     <script src="assets/admin/layout3/scripts/layout.js" type="text/javascript"></script>
     <script src="assets/admin/layout3/scripts/demo.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/ion.rangeslider/js/ion-rangeSlider/ion.rangeSlider.js"></script>
+    <script src="assets/admin/pages/scripts/components-ion-sliders.js"></script>
     <script>
         jQuery(document).ready(function () {
             Metronic.init(); // init metronic core components
             Layout.init(); // init current layout
             Demo.init(); // init demo features
+            ComponentsIonSliders.init();
         });
     </script>
 
@@ -250,6 +253,7 @@
     <script src="http://www.amcharts.com/lib/3/serial.js"></script>
     <script src="http://www.amcharts.com/lib/3/themes/light.js"></script>
     <!-- END JAVASCRIPTS -->
+
 </body>
 <!-- END BODY -->
 </html>

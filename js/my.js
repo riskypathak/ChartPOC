@@ -1,8 +1,26 @@
 ﻿var speedFactor = 100;
 var chartEngagement;
 var chartStress;
+var mainSlider;
+var ourZoom = false;
+var otherChartZoom = false;
 
 $(document).ready(function () {
+
+    $("#sliderRange").ionRangeSlider({
+        min: 0,
+        max: 100,
+        type: 'single',
+        step: 1,
+        postfix: "%",
+        prettify: false,
+        from: 0,
+        onChange: function (data) {
+            var totalDuration = $('#containerVideo').find('video').get(0).duration;
+            $('#containerVideo').find('video').get(0).currentTime = totalDuration * data.from / 100;
+        }
+    });
+
 
     $("#fileData").change(handleFileSelect);
 
@@ -11,13 +29,11 @@ $(document).ready(function () {
             document.getElementById("vdoMain").playbackRate = 2.0;
             document.getElementById("btnSpeed").value = "fast";
             $(this).text('Speed: Fast');
-            speedFactor = 50;
         }
         else if (this.value == "fast") {
             document.getElementById("vdoMain").playbackRate = 1.0;
             document.getElementById("btnSpeed").value = "normal";
             $(this).text('Speed: Normal');
-            speedFactor = 100;
         }
     });
 
@@ -34,20 +50,28 @@ $(document).ready(function () {
         }
     });
 
+
+    
+
     setInterval(function () {
 
         var currentTime = $('#containerVideo').find('video').get(0).currentTime;
         var totalDuration = $('#containerVideo').find('video').get(0).duration;
 
-        if (!isNaN(totalDuration)) {
+        if (!isNaN(totalDuration) || !$('#containerVideo').find('video').get(0).paused) {
             $('#spnCurrentTime').html(secondsToMinutes(currentTime));
             $('#spnTotalTime').html(secondsToMinutes(totalDuration));
 
-            var currentValue = parseInt(currentTime * 100 / totalDuration)
-            $('.progress-bar').css('width', currentValue + '%').attr('aria-valuenow', currentValue);
+            var currentValue = parseInt(currentTime * 100 / totalDuration);
+            mainSlider = $("#sliderRange").data("ionRangeSlider");
+
+            mainSlider.update({
+                from: currentValue
+            });
 
             chartEngagement.zoomToIndexes(Math.floor(currentTime) * 10, Math.floor(currentTime + 5) * 10);
             chartStress.zoomToIndexes(Math.floor(currentTime) * 10, Math.floor(currentTime + 5) * 10);
+            ourZoom = true;
         }
 
     }, 500);
@@ -208,29 +232,14 @@ function processEngagement(chartDiv, data) {
                             "scrollbarHeight": 50,
                             "selectedGraphFillColor": "#319CFF",
                             "selectedGraphLineColor": "#319CFF",
-                            "enabled": false
+                            "enabled": true
                         },
                         "trendLines": [],
                         "graphs": [
                             {
-                                "alphaField": "Stress",
-                                "animationPlayed": true,
-                                "bulletBorderThickness": 0,
-                                "dateFormat": "JJ:NN:SS",
-                                "fillToAxis": "stress_axis",
-                                "fillToGraph": "stress",
-                                "gapPeriod": 0,
+                                "fillAlphas": 0.4,
                                 "id": "stress",
-                                "minDistance": 23,
-                                "precision": 2,
-                                "title": "Stress",
-                                "valueAxis": "stress_axis",
-                                "valueField": "Stress",
-                                "visibleInLegend": false,
-                                "xAxis": "Not set",
-                                "xField": "Time",
-                                "yAxis": "Not set",
-                                "yField": "Stress"
+                                "valueField": "Stress"
                             }
                         ],
                         "guides": [],
@@ -290,10 +299,26 @@ function processEngagement(chartDiv, data) {
                                 "text": ""
                             }
                         ],
-                        "dataProvider": data
+                        "dataProvider": data,
                     });
 
     chartEngagement.zoomToIndexes(0, 50);
+    chartEngagement.addListener("zoomed", handleZoom);
+}
+
+function handleZoom(event) {
+    if (ourZoom) {
+        ourZoom = false;
+    }
+    else {
+        if (otherChartZoom) {
+            otherChartZoom = false;
+        }
+        else {
+            $('#containerVideo').find('video').get(0).currentTime = Math.ceil(event.startIndex / 10);
+            otherChartZoom = true;
+        }
+    }
 }
 
 function processStress(chartDiv, data) {
@@ -376,29 +401,14 @@ function processStress(chartDiv, data) {
                             "scrollbarHeight": 50,
                             "selectedGraphFillColor": "#319CFF",
                             "selectedGraphLineColor": "#319CFF",
-                            "enabled": false
+                            "enabled": true
                         },
                         "trendLines": [],
                         "graphs": [
                             {
-                                "alphaField": "Stress",
-                                "animationPlayed": true,
-                                "bulletBorderThickness": 0,
-                                "dateFormat": "JJ:NN:SS",
-                                "fillToAxis": "stress_axis",
-                                "fillToGraph": "stress",
-                                "gapPeriod": 0,
+                                "fillAlphas": 0.4,
                                 "id": "stress",
-                                "minDistance": 23,
-                                "precision": 2,
-                                "title": "Stress",
-                                "valueAxis": "stress_axis",
-                                "valueField": "Stress",
-                                "visibleInLegend": false,
-                                "xAxis": "Not set",
-                                "xField": "Time",
-                                "yAxis": "Not set",
-                                "yField": "Stress"
+                                "valueField": "Stress"
                             }
                         ],
                         "guides": [],
@@ -462,4 +472,5 @@ function processStress(chartDiv, data) {
                     });
 
     chartStress.zoomToIndexes(0, 50);
+    chartStress.addListener("zoomed", handleZoom);
 }
