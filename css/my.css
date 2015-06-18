@@ -12,14 +12,16 @@
 
 #epochChartEngagement {
     width: 100%;
-    height: 00px;
+    height: 400px;
+    background-color: #FFFFFF;
 }
 
 #epochChartStress {
     width: 100%;
-    height: 00px;
+    height: 400px;
+    background-color: #FFFFFF;
 }
 
-.sliderClass{
+.sliderClass {
     width: 100px;
 }

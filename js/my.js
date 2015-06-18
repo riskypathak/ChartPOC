@@ -30,7 +30,7 @@ $(document).ready(function () {
         min: 0,
         max: 100,
         type: 'single',
-        step: 2,
+        step: 1,
         postfix: "%",
         prettify: false,
         from: 0,
@@ -80,8 +80,8 @@ $(document).ready(function () {
         if (isSliderMovedManually) {
 
             video.currentTime = videoTotalDuration * sliderFrom / 100; //video
-            chartStress.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10);//schart
-            chartEngagement.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10);//echart
+            chartStress.zoomToIndexes(Math.floor(video.currentTime * 10 + 1), Math.floor((video.currentTime + 5) * 10 + 1));//schart
+            chartEngagement.zoomToIndexes(Math.floor(video.currentTime * 10 + 1), Math.floor((video.currentTime + 5) * 10 + 1));//echart
 
 
             isSliderMovedManually = false;
@@ -92,7 +92,7 @@ $(document).ready(function () {
             video.currentTime = Math.ceil(SChartStartIndex / 10); //video
             var currentValue = parseInt(video.currentTime * 100 / videoTotalDuration);
             mainSlider.update({ from: currentValue }); //slider
-            chartEngagement.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10);//echart
+            chartEngagement.zoomToIndexes(Math.floor(video.currentTime * 10 + 1), Math.floor((video.currentTime + 5) * 10 + 1));//echart
 
             IsSChartMovedManually = false;
         }
@@ -101,7 +101,7 @@ $(document).ready(function () {
             video.currentTime = Math.ceil(EChartStartIndex / 10); //video
             var currentValue = parseInt(video.currentTime * 100 / videoTotalDuration);
             mainSlider.update({ from: currentValue }); //slider
-            chartStress.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10);//schart
+            chartStress.zoomToIndexes(Math.floor(video.currentTime * 10 + 1), Math.floor((video.currentTime + 5) * 10 + 1));//schart
 
             isEChartMovedManually = false;
         }
@@ -110,15 +110,18 @@ $(document).ready(function () {
                 var currentValue = parseInt(video.currentTime * 100 / videoTotalDuration);
                 mainSlider.update({ from: currentValue }); //slider
 
-                $('#spnCurrentTime').html(secondsToMinutes(Math.floor(video.currentTime) * 10));
-                chartStress.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10); //schart
-                chartEngagement.zoomToIndexes(Math.floor(video.currentTime) * 10, Math.floor(video.currentTime + 5) * 10); //echart
+                chartStress.zoomToIndexes(Math.floor(video.currentTime * 10 + 1), Math.floor((video.currentTime + 5) * 10 + 1)); //schart
+                chartEngagement.zoomToIndexes(Math.floor(video.currentTime * 10 + 1), Math.floor((video.currentTime + 5) * 10 + 1)); //echart
 
+                console.log("vide0 current time: " + video.currentTime + " | startIndex: " + Math.floor(video.currentTime * 10 + 1));
             }
         }
 
-        //$('#spnCurrentTime').html(secondsToMinutes(video.currentTime));
-        $('#spnTotalTime').html(secondsToMinutes(videoTotalDuration));
+        if (!isNaN(videoTotalDuration)) {
+            $('#spnCurrentTime').html(secondsToMinutes(video.currentTime));
+            $('#spnTotalTime').html(secondsToMinutes(videoTotalDuration));
+        }
+
         isSyncProcess = false;
 
     }, 500);
@@ -273,9 +276,9 @@ function processEngagement(chartDiv, data) {
                             "gridColor": "#CFCFCF",
                             "gridCount": 1,
                             "hideResizeGrips": true,
-                            "maximum": 1.0,
+                            "maximum": 1.01,
                             "minimum": 0,
-                            "offset": 100,
+                            "offset": 10,
                             "scrollbarHeight": 50,
                             "selectedGraphFillColor": "#319CFF",
                             "selectedGraphLineColor": "#319CFF",
@@ -292,7 +295,7 @@ function processEngagement(chartDiv, data) {
                                 //"fillToGraph": "stress",
                                 //"gapPeriod": 0,
                                 "minDistance": 23,
-                                "precision": 2,
+                                "precision": 3,
                                 "title": "Stress",
                                 "valueAxis": "stress_axis",
                                 "fillAlphas": 0.4,
@@ -309,7 +312,7 @@ function processEngagement(chartDiv, data) {
                         "valueAxes": [
                             {
                                 "id": "stress_axis",
-                                "maximum": 1.0,
+                                "maximum": 1.01,
                                 "minimum": 0,
                                 "precision": 1,
                                 "strictMinMax": true,
@@ -365,7 +368,7 @@ function processEngagement(chartDiv, data) {
                         "dataProvider": data
                     });
 
-    chartEngagement.zoomToIndexes(0, 50);
+    chartEngagement.zoomToIndexes(1, 51);
     chartEngagement.addListener("zoomed", handleEChartZoom);
 }
 
@@ -408,9 +411,9 @@ function processStress(chartDiv, data) {
                             "gridColor": "#CFCFCF",
                             "gridCount": 1,
                             "hideResizeGrips": true,
-                            "maximum": 1.2,
+                            "maximum": 1.01,
                             "minimum": 0,
-                            "offset": 100,
+                            "offset": 10,
                             "scrollbarHeight": 50,
                             "selectedGraphFillColor": "#319CFF",
                             "selectedGraphLineColor": "#319CFF",
@@ -427,7 +430,7 @@ function processStress(chartDiv, data) {
                                 //"fillToGraph": "stress",
                                 //"gapPeriod": 0,
                                 "minDistance": 23,
-                                "precision": 2,
+                                "precision": 3,
                                 "title": "Stress",
                                 "valueAxis": "stress_axis",
                                 "fillAlphas": 0.4,
@@ -444,7 +447,7 @@ function processStress(chartDiv, data) {
                         "valueAxes": [
                             {
                                 "id": "stress_axis",
-                                "maximum": 1.2,
+                                "maximum": 1.01,
                                 "minimum": 0,
                                 "precision": 1,
                                 "strictMinMax": true,
@@ -466,6 +469,6 @@ function processStress(chartDiv, data) {
                         "dataProvider": data
                     });
 
-    chartStress.zoomToIndexes(0, 50);
+    chartStress.zoomToIndexes(1, 51);
     chartStress.addListener("zoomed", handleSChartZoom);
 }
