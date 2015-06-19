@@ -80,8 +80,8 @@ $(document).ready(function () {
         if (isSliderMovedManually) {
 
             video.currentTime = videoTotalDuration * sliderFrom / 100; //video
-            chartStress.zoomToIndexes(Math.floor(video.currentTime * 10 + 1), Math.floor((video.currentTime + 5) * 10 + 1));//schart
-            chartEngagement.zoomToIndexes(Math.floor(video.currentTime * 10 + 1), Math.floor((video.currentTime + 5) * 10 + 1));//echart
+            chartStress.zoomToIndexes(Math.floor(video.currentTime * 10), Math.floor((video.currentTime + 5) * 10) - 1);//schart
+            chartEngagement.zoomToIndexes(Math.floor(video.currentTime * 10), Math.floor((video.currentTime + 5) * 10) - 1);//echart
 
 
             isSliderMovedManually = false;
@@ -92,7 +92,7 @@ $(document).ready(function () {
             video.currentTime = Math.ceil(SChartStartIndex / 10); //video
             var currentValue = parseInt(video.currentTime * 100 / videoTotalDuration);
             mainSlider.update({ from: currentValue }); //slider
-            chartEngagement.zoomToIndexes(Math.floor(video.currentTime * 10 + 1), Math.floor((video.currentTime + 5) * 10 + 1));//echart
+            chartEngagement.zoomToIndexes(Math.floor(video.currentTime * 10), Math.floor((video.currentTime + 5) * 10) - 1);//echart
 
             IsSChartMovedManually = false;
         }
@@ -101,7 +101,7 @@ $(document).ready(function () {
             video.currentTime = Math.ceil(EChartStartIndex / 10); //video
             var currentValue = parseInt(video.currentTime * 100 / videoTotalDuration);
             mainSlider.update({ from: currentValue }); //slider
-            chartStress.zoomToIndexes(Math.floor(video.currentTime * 10 + 1), Math.floor((video.currentTime + 5) * 10 + 1));//schart
+            chartStress.zoomToIndexes(Math.floor(video.currentTime * 10), Math.floor((video.currentTime + 5) * 10) - 1);//schart
 
             isEChartMovedManually = false;
         }
@@ -110,10 +110,10 @@ $(document).ready(function () {
                 var currentValue = parseInt(video.currentTime * 100 / videoTotalDuration);
                 mainSlider.update({ from: currentValue }); //slider
 
-                chartStress.zoomToIndexes(Math.floor(video.currentTime * 10 + 1), Math.floor((video.currentTime + 5) * 10 + 1)); //schart
-                chartEngagement.zoomToIndexes(Math.floor(video.currentTime * 10 + 1), Math.floor((video.currentTime + 5) * 10 + 1)); //echart
+                chartStress.zoomToIndexes(Math.floor(video.currentTime * 10), Math.floor((video.currentTime + 5) * 10) - 1); //schart
+                chartEngagement.zoomToIndexes(Math.floor(video.currentTime * 10), Math.floor((video.currentTime + 5) * 10) - 1); //echart
 
-                console.log("vide0 current time: " + video.currentTime + " | startIndex: " + Math.floor(video.currentTime * 10 + 1));
+                //console.log("vide0 current time: " + video.currentTime + " | startIndex: " + Math.floor(video.currentTime * 10));
             }
         }
 
@@ -209,8 +209,8 @@ function processEngagement(chartDiv, data) {
                         "path": "http://www.amcharts.com/lib/3/",
                         "categoryField": "Time",
                         "dataDateFormat": "JJ:NN:SS.QQQ",
-                        "maxSelectedTime": 10000,
-                        "minSelectedTime": 10000,
+                        "maxSelectedTime": 5000,
+                        "minSelectedTime": 5000,
                         "zoomOutButtonImageSize": 15,
                         "categoryAxis": {
                             "autoRotateCount": 0,
@@ -248,7 +248,7 @@ function processEngagement(chartDiv, data) {
                                     "format": "YYYY"
                                 }
                             ],
-                            "minPeriod": "ss",
+                            "minPeriod": "fff",
                             "parseDates": true,
                             "position": "top",
                             "gridCount": 2,
@@ -368,7 +368,7 @@ function processEngagement(chartDiv, data) {
                         "dataProvider": data
                     });
 
-    chartEngagement.zoomToIndexes(1, 51);
+    chartEngagement.zoomToIndexes(0, 49);
     chartEngagement.addListener("zoomed", handleEChartZoom);
 }
 
@@ -379,11 +379,11 @@ function processStress(chartDiv, data) {
                         "path": "http://www.amcharts.com/lib/3/",
                         "categoryField": "Time",
                         "dataDateFormat": "JJ:NN:SS.QQQ",
-                        "maxSelectedTime": 10000,
-                        "minSelectedTime": 10000,
+                        "maxSelectedTime": 5000,
+                        "minSelectedTime": 5000,
                         "zoomOutButtonImageSize": 15,
                         "categoryAxis": {
-                            "minPeriod": "ss",
+                            "minPeriod": "fff",
                             "parseDates": true,
                             "position": "top",
                             "gridCount": 2,
@@ -469,6 +469,6 @@ function processStress(chartDiv, data) {
                         "dataProvider": data
                     });
 
-    chartStress.zoomToIndexes(1, 51);
+    chartStress.zoomToIndexes(0, 49);
     chartStress.addListener("zoomed", handleSChartZoom);
 }
