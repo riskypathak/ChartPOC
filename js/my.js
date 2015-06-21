@@ -212,6 +212,7 @@ function processEngagement(chartDiv, data) {
                         "maxSelectedTime": 5000,
                         "minSelectedTime": 5000,
                         "zoomOutButtonImageSize": 15,
+                        "zoomOutText": "",
                         "categoryAxis": {
                             "autoRotateCount": 0,
                             "dateFormats": [
@@ -382,6 +383,7 @@ function processStress(chartDiv, data) {
                         "maxSelectedTime": 5000,
                         "minSelectedTime": 5000,
                         "zoomOutButtonImageSize": 15,
+                        "zoomOutText": "",
                         "categoryAxis": {
                             "minPeriod": "fff",
                             "parseDates": true,
