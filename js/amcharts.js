@@ -2460,7 +2460,7 @@
                 if ("serial" == f || "xy" == f || "gantt" == f) b = this.marginLeftReal, c = this.marginTopReal, e = b + this.plotAreaWidth, d = c + this.plotAreaHeight;
                 var g = "http://www.amcharts.com/javascript-charts/",
                     k = "JavaScript charts",
-                    l = "";
+                    l = "JS chart by amCharts";
                 "ammap" == this.product && (g = "http://www.ammap.com/javascript-maps/", k = "Interactive JavaScript maps", l = "JS map by amCharts");
                 f = document.createElement("a");
                 l = document.createTextNode(l);

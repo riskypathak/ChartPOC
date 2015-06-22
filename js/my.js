@@ -206,6 +206,7 @@ function processEngagement(chartDiv, data) {
     chartEngagement = AmCharts.makeChart(chartDiv,
                     {
                         "type": "serial",
+                        "path": "http://www.amcharts.com/lib/3/",
                         "categoryField": "Time",
                         "dataDateFormat": "JJ:NN:SS.QQQ",
                         "maxSelectedTime": 5000,
@@ -376,6 +377,7 @@ function processStress(chartDiv, data) {
     chartStress = AmCharts.makeChart(chartDiv,
                     {
                         "type": "serial",
+                        "path": "http://www.amcharts.com/lib/3/",
                         "categoryField": "Time",
                         "dataDateFormat": "JJ:NN:SS.QQQ",
                         "maxSelectedTime": 5000,
